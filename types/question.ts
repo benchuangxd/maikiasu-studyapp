@@ -47,6 +47,30 @@ export interface StudySession {
   correctAnswers: number;
   accuracy: number;
   duration: number;
+  mode?: 'due' | 'topic' | 'all' | 'new';
+  isRetry?: boolean;
+  parentSessionId?: string;
+}
+
+export interface ActiveSessionAnswer {
+  selectedAnswer: number | string | string[];
+  // MC: number (choice index), fill-in-blank: string, sorting: string[] (choice IDs in order)
+  isCorrect: boolean;
+  submittedAt: string;
+  confidence: 'sure' | 'guessing';
+}
+
+export interface ActiveSession {
+  id: string;
+  mode: 'due' | 'topic' | 'all' | 'new';
+  selectedTopics?: string[];
+  questionIds: string[];
+  answers: Record<string, ActiveSessionAnswer>;
+  currentIndex: number;
+  startedAt: string;
+  elapsedSeconds: number;
+  isRetry: boolean;
+  parentSessionId?: string;
 }
 
 export interface RawQuestion {

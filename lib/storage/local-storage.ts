@@ -52,4 +52,5 @@ export const STORAGE_KEYS = {
   REVIEW_METADATA: 'maikiasu:review-metadata',
   SESSIONS: 'maikiasu:sessions',
   SETTINGS: 'maikiasu:settings',
+  ACTIVE_SESSION: 'maikiasu:active-session',
 } as const;
