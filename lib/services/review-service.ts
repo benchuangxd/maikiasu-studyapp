@@ -32,9 +32,10 @@ export function getReviewMetadata(questionId: string): ReviewMetadata {
 export function updateReviewMetadata(
   questionId: string,
   isCorrect: boolean,
+  confidence: 'sure' | 'guessing' = 'sure',
 ): ReviewMetadata {
   const currentMetadata = getReviewMetadata(questionId);
-  const quality = getQualityRating(isCorrect);
+  const quality = getQualityRating(isCorrect, confidence);
 
   const result = calculateSM2({
     easeFactor: currentMetadata.easinessFactor,
@@ -65,6 +66,18 @@ export function getDueQuestions(questions: Question[]): Question[] {
     if (!metadata.lastReviewed) return true;
     return isDueForReview(metadata.nextReviewDate);
   });
+}
+
+export function getDueQuestionsByTopic(questions: Question[]): Record<string, Question[]> {
+  const dueQuestions = getDueQuestions(questions);
+  const byTopic: Record<string, Question[]> = {};
+  for (const q of dueQuestions) {
+    if (!byTopic[q.category]) {
+      byTopic[q.category] = [];
+    }
+    byTopic[q.category].push(q);
+  }
+  return byTopic;
 }
 
 export function getNewQuestions(questions: Question[]): Question[] {

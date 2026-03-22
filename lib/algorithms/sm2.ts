@@ -49,8 +49,9 @@ export function calculateSM2({ easeFactor, interval, repetitions, quality }: SM2
   };
 }
 
-export function getQualityRating(isCorrect: boolean): number {
-  return isCorrect ? 4 : 0;
+export function getQualityRating(isCorrect: boolean, confidence: 'sure' | 'guessing' = 'sure'): number {
+  if (!isCorrect) return 0;
+  return confidence === 'guessing' ? 3 : 4;
 }
 
 export function isDueForReview(nextReviewDate: string, currentDate: Date = new Date()): boolean {
