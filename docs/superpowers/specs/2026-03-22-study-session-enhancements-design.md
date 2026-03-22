@@ -37,7 +37,7 @@ components/study/
 ### Component Responsibilities
 
 **`study-session.tsx` (Orchestrator)**
-- Owns all state: `currentIndex`, `answers` map, `score`, `elapsedSeconds`, `streak`
+- Owns all state: `currentIndex`, `answers` map, `score`, `elapsedSeconds`, `streak` (streak is component-only `useState`, not persisted in `ActiveSession` — resets to 0 on resume)
 - Auto-saves `ActiveSession` to localStorage after every answer
 - Coordinates SM-2 updates via `updateReviewMetadata()`
 - Handles keyboard shortcuts (`←`, `→`, `G`, `1-4`, `Enter`)
@@ -100,6 +100,9 @@ interface ActiveSession {
   questionIds: string[];         // ordered list of question IDs
   answers: Record<string, {      // keyed by question ID
     selectedAnswer: number | string | string[];
+    // For MC: number (selected choice index)
+    // For fill-in-blank: string (typed text)
+    // For sorting: string[] (array of choice IDs in user's order)
     isCorrect: boolean;
     submittedAt: string;         // ISO timestamp
     confidence: 'sure' | 'guessing';
@@ -123,10 +126,10 @@ ACTIVE_SESSION: 'maikiasu:active-session'
 
 | Event | Action |
 |-------|--------|
-| Answer submitted | Save full `ActiveSession` to localStorage |
+| Answer submitted | Save full `ActiveSession` to localStorage. Wrap in try-catch; on `QuotaExceededError`, show a non-blocking toast: "Session auto-save failed — storage full. Your session will continue but cannot be resumed if you leave." Suppress further save attempts for the current session. |
 | Navigate to `/study` | Check for `ActiveSession`, show resume banner if found |
 | Navigate to Home `/` | Check for `ActiveSession`, show resume banner if found |
-| Click "Resume" | Restore session, jump to next unanswered question |
+| Click "Resume" | Restore session. Validate all `questionIds` still exist in the question bank — filter out any missing IDs and adjust `currentIndex` accordingly. If no valid questions remain, delete `ActiveSession` and show mode selection. Jump to next unanswered question. |
 | Click "Start Fresh" | Delete `ActiveSession`, show mode selection |
 | Session completes | Record `StudySession`, delete `ActiveSession` |
 | Click "Back to Study" on summary | Delete `ActiveSession`, return to mode selection |
@@ -154,7 +157,7 @@ Study Page → [Resume banner if active session exists]
            → Click mode card
            → [Due for Review: Topic selection with due counts]
            → [By Topic: Topic selection with all counts (unchanged)]
-           → [All / New: Start immediately]
+           → [All / New: Start immediately, no topic selection]
            → Quiz (with navigation, persistence, timer)
            → Summary screen (with retry option)
 ```
@@ -168,6 +171,7 @@ When "Due for Review" is clicked, show a topic selection screen:
 - Each topic shows its due count: `Configuration Management (38 due)`
 - "Start Review" button shows total selected due count, disabled if nothing selected
 - This reuses the existing topic selection pattern from "By Topic" mode but filtered to due questions
+- If no topics have due questions (all counts are 0), this path is unreachable because the "Due for Review" mode card shows count 0 and is not clickable when there are no due questions
 
 ### Home Page Changes
 
@@ -178,14 +182,16 @@ When "Due for Review" is clicked, show a topic selection screen:
 
 ## 4. Retry Flow
 
-1. Session summary shows "Retry Missed (N)" button (only if N > 0)
+1. Session summary shows "Retry Missed (N)" button only if N > 0. If all answers are correct (N=0), the "Retry Missed" button is hidden; only "Back to Study" is shown.
 2. Clicking creates a new `ActiveSession` with:
    - `isRetry: true`
    - `parentSessionId` set to original session ID
    - `questionIds` = only the incorrectly answered questions, reshuffled
 3. Retry session runs as a normal session (navigation, persistence, timer all work)
-4. SM-2 is updated on each retry answer — getting a question right on retry calls `updateReviewMetadata(questionId, true)` with quality=4 (or quality=3 if guessing)
-5. Retry session is recorded as a separate `StudySession` in history
+4. SM-2 is updated on every answer submission regardless of retry status:
+   - Correct answer: `updateReviewMetadata(questionId, true, confidence)` with quality=4 (sure) or quality=3 (guessing)
+   - Incorrect answer: `updateReviewMetadata(questionId, false, confidence)` with quality=0
+5. Retry session is recorded as a separate `StudySession` in history with `isRetry: true` and `parentSessionId` set
 6. At retry summary, "Retry Missed" appears again if there are still incorrect answers
 7. User can keep retrying or click "Back to Study" to exit
 
@@ -218,6 +224,18 @@ export function getQualityRating(isCorrect: boolean, confidence: 'sure' | 'guess
 }
 ```
 
+### `updateReviewMetadata` Signature Update
+
+```typescript
+// Before
+export function updateReviewMetadata(questionId: string, isCorrect: boolean): ReviewMetadata
+
+// After
+export function updateReviewMetadata(questionId: string, isCorrect: boolean, confidence?: 'sure' | 'guessing'): ReviewMetadata
+```
+
+Internally calls: `const quality = getQualityRating(isCorrect, confidence);`
+
 ### UI
 
 Replace the single "Submit Answer" button with two side-by-side buttons:
@@ -235,12 +253,12 @@ Both are disabled until an answer is selected. Both trigger the same submit flow
 | `←` | Previous question | Always (disabled on Q1) |
 | `→` | Next question | Always (disabled at frontier before submit) |
 | `G` | Toggle question grid | Always |
-| `1`, `2`, `3`, `4` | Select MC answer option | MC questions, before submission |
-| `Enter` | Submit (sure) / Next question | Before submit: submits with sure confidence. After submit: advances to next. |
+| `1`-`4` | Select MC answer option | MC questions, before submission. Only reaches the first 4 options; questions with 5+ choices require mouse/touch for remaining options. |
+| `Enter` | Submit (sure) / Next question | Before submit: submits with sure confidence. After submit: advances to next. On the last question after submission, Enter navigates to the summary screen. |
 | `Escape` | Close grid modal | When grid is open |
 
 - Shortcuts are registered via `useEffect` with `keydown` listener on `window`
-- Disabled when grid modal is open (except `G` to close and `Escape`)
+- When the grid modal is open, only `G` (to close the grid) and `Escape` (to close the grid) are active. All other shortcuts are suppressed.
 - A `⌨` icon in the navigation bar; hovering shows a tooltip listing all shortcuts
 
 ---
@@ -248,7 +266,7 @@ Both are disabled until an answer is selected. Both trigger the same submit flow
 ## 7. Session Timer
 
 - Displays in the top-right of the study session, near the score counter
-- Format: `mm:ss` (e.g., `12:34`)
+- Format: `mm:ss` (e.g., `12:34`). If `elapsedSeconds >= 3600`, display as `h:mm:ss` (e.g., `1:05:23`)
 - Starts from `00:00` on new session, or from `elapsedSeconds` on resume
 - Pauses when browser tab is hidden (`document.visibilitychange` event)
 - Stored as `elapsedSeconds` in `ActiveSession` for persistence
@@ -262,7 +280,7 @@ Both are disabled until an answer is selected. Both trigger the same submit flow
 - Shows current consecutive correct answers: `🔥 5`
 - Positioned near the score counter in the session header
 - Resets to 0 on any incorrect answer
-- Not persisted across sessions (resets on resume)
+- Not persisted — held as component state only (`useState`). On resume, streak starts at 0
 - Purely visual/motivational — no effect on SM-2 or scoring
 
 ---
@@ -276,6 +294,9 @@ Added to `types/question.ts`:
 ```typescript
 export interface ActiveSessionAnswer {
   selectedAnswer: number | string | string[];
+  // For MC: number (selected choice index)
+  // For fill-in-blank: string (typed text)
+  // For sorting: string[] (array of choice IDs in user's order)
   isCorrect: boolean;
   submittedAt: string;
   confidence: 'sure' | 'guessing';
@@ -294,6 +315,27 @@ export interface ActiveSession {
   parentSessionId?: string;
 }
 ```
+
+### Updated Type: `StudySession`
+
+Add retry tracking fields:
+
+```typescript
+export interface StudySession {
+  id: string;
+  date: string;
+  topic: string | 'mixed';
+  totalQuestions: number;
+  correctAnswers: number;
+  accuracy: number;
+  duration: number;
+  mode: 'due' | 'topic' | 'all' | 'new';  // NEW
+  isRetry?: boolean;                        // NEW
+  parentSessionId?: string;                 // NEW
+}
+```
+
+When multiple topics are involved, `topic` is set to `'mixed'` (preserving existing behavior and home page compatibility).
 
 ### Storage Key Addition
 
@@ -323,7 +365,7 @@ export function getQualityRating(isCorrect: boolean, confidence?: 'sure' | 'gues
 
 | File | Change |
 |------|--------|
-| `types/question.ts` | Add `ActiveSession`, `ActiveSessionAnswer` types |
+| `types/question.ts` | Add `ActiveSession`, `ActiveSessionAnswer` types; add `mode`, `isRetry?`, `parentSessionId?` fields to `StudySession` |
 | `lib/storage/local-storage.ts` | Add `ACTIVE_SESSION` storage key |
 | `lib/algorithms/sm2.ts` | Update `getQualityRating` for confidence parameter |
 | `lib/services/review-service.ts` | Update `updateReviewMetadata` to accept confidence |
@@ -335,4 +377,4 @@ export function getQualityRating(isCorrect: boolean, confidence?: 'sure' | 'gues
 | `components/study/session-summary.tsx` | **New** — end screen with retry |
 | `components/study/session-resume-banner.tsx` | **New** — resume/start-fresh prompt |
 | `app/study/page.tsx` | Add resume check, due-by-topic flow, remove inline summary |
-| `app/page.tsx` | Add resume banner integration |
+| `app/page.tsx` | Add resume banner integration; update topic display to handle `'mixed'` value consistently |
