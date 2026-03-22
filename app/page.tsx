@@ -2,35 +2,28 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SessionResumeBanner } from '@/components/study/session-resume-banner';
 import { LocalStorageAdapter, STORAGE_KEYS } from '@/lib/storage/local-storage';
 import { getDueQuestions, getReviewStats } from '@/lib/services/review-service';
-import type { Question, StudySession } from '@/types/question';
+import type { Question, StudySession, ActiveSession } from '@/types/question';
+import { formatDurationHuman, formatDate } from '@/lib/utils/format';
 import { cn } from '@/lib/utils';
 
 const questionsStorage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTIONS);
 const sessionsStorage = new LocalStorageAdapter<StudySession[]>(STORAGE_KEYS.SESSIONS);
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  if (m === 0) return `${s}s`;
-  return `${m}m ${s}s`;
-}
-
 export default function Home() {
+  const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [sessions, setSessions] = useState<StudySession[]>([]);
   const [dueCount, setDueCount] = useState(0);
   const [overallAccuracy, setOverallAccuracy] = useState<number | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [activeStudySession, setActiveStudySession] = useState<ActiveSession | null>(null);
 
   useEffect(() => {
     const qs = questionsStorage.get() ?? [];
@@ -47,6 +40,16 @@ export default function Home() {
       const totalCorrect = ss.reduce((acc, s) => acc + s.correctAnswers, 0);
       const totalQuestions = ss.reduce((acc, s) => acc + s.totalQuestions, 0);
       setOverallAccuracy(totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0);
+    }
+
+    // Check for active study session
+    const activeSession = new LocalStorageAdapter<ActiveSession>(STORAGE_KEYS.ACTIVE_SESSION).get();
+    if (activeSession) {
+      const questionIds = new Set(qs.map((q: Question) => q.id));
+      const validIds = activeSession.questionIds.filter((id: string) => questionIds.has(id));
+      if (validIds.length > 0) {
+        setActiveStudySession(activeSession);
+      }
     }
 
     setLoaded(true);
@@ -121,6 +124,18 @@ export default function Home() {
         <h1 className="text-4xl font-bold tracking-tight text-foreground">MaiKiasu</h1>
         <p className="text-muted-foreground">Your spaced repetition dashboard</p>
       </div>
+
+      {/* Resume banner */}
+      {activeStudySession && (
+        <SessionResumeBanner
+          session={activeStudySession}
+          onResume={() => router.push('/study')}
+          onStartFresh={() => {
+            new LocalStorageAdapter<ActiveSession>(STORAGE_KEYS.ACTIVE_SESSION).remove();
+            setActiveStudySession(null);
+          }}
+        />
+      )}
 
       {/* Quick stats */}
       <section className="grid grid-cols-3 gap-4">
@@ -206,7 +221,7 @@ export default function Home() {
                     </span>
                     {session.duration > 0 && (
                       <span className="text-xs text-muted-foreground hidden sm:inline">
-                        {formatDuration(session.duration)}
+                        {formatDurationHuman(session.duration)}
                       </span>
                     )}
                   </div>
