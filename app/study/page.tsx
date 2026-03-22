@@ -155,22 +155,6 @@ function StudyPageContent() {
     }
   }, [selectedMode, allQuestions, dueQuestions, newQuestions, selectedCategories, resumeSession]);
 
-  const topicLabel = useMemo((): string => {
-    if (selectedCategories.size === 1) return Array.from(selectedCategories)[0];
-    switch (selectedMode) {
-      case 'due':
-        return 'mixed';
-      case 'topic':
-        return selectedCategories.size === 1 ? Array.from(selectedCategories)[0] : 'mixed';
-      case 'all':
-        return 'mixed';
-      case 'new':
-        return 'mixed';
-      default:
-        return 'mixed';
-    }
-  }, [selectedMode, selectedCategories]);
-
   const handleComplete = (session: StudySessionType) => {
     const existing = sessionsStorage.get() ?? [];
     sessionsStorage.set([session, ...existing]);
@@ -460,7 +444,6 @@ function StudyPageContent() {
         <StudySession
           key={resumeSession?.id ?? selectedMode}
           questions={quizQuestions}
-          topic={topicLabel}
           mode={selectedMode ?? 'all'}
           selectedTopics={Array.from(selectedCategories)}
           isRetry={resumeSession?.isRetry}

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import type { Question, ActiveSessionAnswer } from '@/types/question';
 import { formatDuration } from '@/lib/utils/format';
-import { cn } from '@/lib/utils';
+
 import {
   Trophy,
   RotateCcw,

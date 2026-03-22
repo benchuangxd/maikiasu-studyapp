@@ -24,7 +24,6 @@ import { Flame, Clock } from 'lucide-react';
 
 interface StudySessionProps {
   questions: Question[];
-  topic: string;
   mode: 'due' | 'topic' | 'all' | 'new';
   selectedTopics?: string[];
   isRetry?: boolean;
@@ -40,7 +39,6 @@ const activeSessionStorage = new LocalStorageAdapter<ActiveSession>(STORAGE_KEYS
 
 export function StudySession({
   questions,
-  topic,
   mode,
   selectedTopics,
   isRetry = false,
