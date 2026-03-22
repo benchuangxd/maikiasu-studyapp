@@ -1,16 +1,21 @@
 'use client';
 
-import { useState, useEffect, useMemo, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { StudySession } from '@/components/study/study-session';
-import type { Question, StudySession as StudySessionType } from '@/types/question';
+import { SessionResumeBanner } from '@/components/study/session-resume-banner';
+import type {
+  Question,
+  StudySession as StudySessionType,
+  ActiveSession,
+} from '@/types/question';
 import { LocalStorageAdapter, STORAGE_KEYS } from '@/lib/storage/local-storage';
 import {
   getDueQuestions,
+  getDueQuestionsByTopic,
   getNewQuestions,
   getReviewStats,
 } from '@/lib/services/review-service';
@@ -20,34 +25,49 @@ import {
   BookOpen,
   Layers,
   Sparkles,
-  Trophy,
   ArrowLeft,
-  RotateCcw,
-  Home,
   Check,
 } from 'lucide-react';
 
 type StudyMode = 'due' | 'topic' | 'all' | 'new';
-type Phase = 'mode-select' | 'topic-select' | 'quiz' | 'summary';
+type Phase = 'mode-select' | 'topic-select' | 'due-topic-select' | 'quiz';
 
 const questionsStorage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTIONS);
 const sessionsStorage = new LocalStorageAdapter<StudySessionType[]>(STORAGE_KEYS.SESSIONS);
+const activeSessionStorage = new LocalStorageAdapter<ActiveSession>(STORAGE_KEYS.ACTIVE_SESSION);
 
 function StudyPageContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [phase, setPhase] = useState<Phase>('mode-select');
   const [selectedMode, setSelectedMode] = useState<StudyMode | null>(null);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
-  const [completedSession, setCompletedSession] = useState<StudySessionType | null>(null);
+  const [savedSession, setSavedSession] = useState<ActiveSession | null>(null);
+  const [resumeSession, setResumeSession] = useState<ActiveSession | null>(null);
 
-  // Load questions from localStorage
+  // Load questions and check for saved session
   useEffect(() => {
     const stored = questionsStorage.get();
-    if (stored) {
-      setAllQuestions(stored);
+    if (stored) setAllQuestions(stored);
+
+    const saved = activeSessionStorage.get();
+    if (saved) {
+      // Validate question IDs still exist
+      const storedQuestions = questionsStorage.get() ?? [];
+      const questionIds = new Set(storedQuestions.map((q) => q.id));
+      const validIds = saved.questionIds.filter((id) => questionIds.has(id));
+
+      if (validIds.length === 0) {
+        activeSessionStorage.remove();
+      } else {
+        const validSession = { ...saved, questionIds: validIds };
+        // Adjust currentIndex if needed
+        if (validSession.currentIndex >= validIds.length) {
+          validSession.currentIndex = validIds.length - 1;
+        }
+        setSavedSession(validSession);
+      }
     }
   }, []);
 
@@ -71,18 +91,23 @@ function StudyPageContent() {
   }, [allQuestions]);
 
   const dueQuestions = useMemo(() => getDueQuestions(allQuestions), [allQuestions]);
+  const dueByTopic = useMemo(() => getDueQuestionsByTopic(allQuestions), [allQuestions]);
   const newQuestions = useMemo(() => getNewQuestions(allQuestions), [allQuestions]);
 
   const handleModeSelect = (mode: StudyMode) => {
     setSelectedMode(mode);
-    if (mode === 'topic') {
+    if (mode === 'due') {
+      setPhase('due-topic-select');
+      // Pre-check all topics that have due questions
+      setSelectedCategories(new Set(Object.keys(dueByTopic)));
+    } else if (mode === 'topic') {
       setPhase('topic-select');
     } else {
       setPhase('quiz');
     }
   };
 
-  const handleStartTopicStudy = () => {
+  const handleStartStudy = () => {
     if (selectedCategories.size > 0) {
       setPhase('quiz');
     }
@@ -91,27 +116,34 @@ function StudyPageContent() {
   const handleToggleCategory = (cat: string) => {
     setSelectedCategories((prev) => {
       const next = new Set(prev);
-      if (next.has(cat)) {
-        next.delete(cat);
-      } else {
-        next.add(cat);
-      }
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
       return next;
     });
   };
 
-  const handleToggleAll = () => {
-    if (selectedCategories.size === categories.length) {
-      setSelectedCategories(new Set());
-    } else {
-      setSelectedCategories(new Set(categories));
+  const handleResume = () => {
+    if (savedSession) {
+      setResumeSession(savedSession);
+      setSelectedMode(savedSession.mode);
+      setSavedSession(null);
+      setPhase('quiz');
     }
   };
 
+  const handleStartFresh = () => {
+    activeSessionStorage.remove();
+    setSavedSession(null);
+    setResumeSession(null);
+  };
+
   const quizQuestions = useMemo((): Question[] => {
+    // If resuming, return all questions (the session has its own questionIds)
+    if (resumeSession) return allQuestions;
+
     switch (selectedMode) {
       case 'due':
-        return dueQuestions;
+        return dueQuestions.filter((q) => selectedCategories.has(q.category));
       case 'topic':
         return allQuestions.filter((q) => selectedCategories.has(q.category));
       case 'all':
@@ -121,43 +153,43 @@ function StudyPageContent() {
       default:
         return [];
     }
-  }, [selectedMode, allQuestions, dueQuestions, newQuestions, selectedCategories]);
+  }, [selectedMode, allQuestions, dueQuestions, newQuestions, selectedCategories, resumeSession]);
 
   const topicLabel = useMemo((): string => {
+    if (selectedCategories.size === 1) return Array.from(selectedCategories)[0];
     switch (selectedMode) {
       case 'due':
-        return 'Due for Review';
+        return 'mixed';
       case 'topic':
-        return Array.from(selectedCategories).join(', ');
+        return selectedCategories.size === 1 ? Array.from(selectedCategories)[0] : 'mixed';
       case 'all':
-        return 'All Questions';
+        return 'mixed';
       case 'new':
-        return 'New Questions';
+        return 'mixed';
       default:
         return 'mixed';
     }
   }, [selectedMode, selectedCategories]);
 
   const handleComplete = (session: StudySessionType) => {
-    // Save session to localStorage
     const existing = sessionsStorage.get() ?? [];
     sessionsStorage.set([session, ...existing]);
-    setCompletedSession(session);
-    setPhase('summary');
   };
 
-  const handleStudyAgain = () => {
+  const handleRetryMissed = (retryActiveSession: ActiveSession) => {
+    setResumeSession(retryActiveSession);
+    setPhase('quiz');
+  };
+
+  const handleBackToStudy = useCallback(() => {
     setPhase('mode-select');
     setSelectedMode(null);
     setSelectedCategories(new Set());
-    setCompletedSession(null);
-  };
-
-  const formatDuration = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+    setResumeSession(null);
+    // Refresh questions and stats
+    const stored = questionsStorage.get();
+    if (stored) setAllQuestions(stored);
+  }, []);
 
   // Phase 1: Mode Selection
   if (phase === 'mode-select') {
@@ -212,6 +244,15 @@ function StudyPageContent() {
           </p>
         </div>
 
+        {/* Resume banner */}
+        {savedSession && (
+          <SessionResumeBanner
+            session={savedSession}
+            onResume={handleResume}
+            onStartFresh={handleStartFresh}
+          />
+        )}
+
         {stats && (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="rounded-lg border bg-card p-3 text-center">
@@ -260,53 +301,44 @@ function StudyPageContent() {
     );
   }
 
-  // Phase 2: Topic Selection
-  if (phase === 'topic-select') {
+  // Phase: Due Topic Selection
+  if (phase === 'due-topic-select') {
+    const allTopicNames = categories;
+    const selectedDueCount = Array.from(selectedCategories).reduce(
+      (sum, cat) => sum + (dueByTopic[cat]?.length ?? 0), 0
+    );
+
     return (
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setPhase('mode-select')}
-          >
+          <Button variant="ghost" size="icon" onClick={() => setPhase('mode-select')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Select Topics</h1>
-            <p className="text-sm text-muted-foreground">
-              Choose which categories to study.
-            </p>
+            <h1 className="text-2xl font-bold">Due for Review — Select Topics</h1>
+            <p className="text-sm text-muted-foreground">Choose which topics to review.</p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <Button variant="outline" size="sm" onClick={handleToggleAll}>
-            {selectedCategories.size === categories.length
-              ? 'Deselect All'
-              : 'Select All'}
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {selectedCategories.size} of {categories.length} selected
-          </span>
-        </div>
-
         <div className="space-y-2">
-          {categories.map((cat) => {
-            const catCount = allQuestions.filter(
-              (q) => q.category === cat
-            ).length;
+          {allTopicNames.map((cat) => {
+            const dueCount = dueByTopic[cat]?.length ?? 0;
+            const hasDue = dueCount > 0;
             const isSelected = selectedCategories.has(cat);
 
             return (
               <div
                 key={cat}
-                onClick={() => handleToggleCategory(cat)}
+                onClick={() => hasDue && handleToggleCategory(cat)}
                 className={cn(
-                  'flex cursor-pointer items-center justify-between rounded-lg border-2 p-4 transition-all',
-                  isSelected
+                  'flex items-center justify-between rounded-lg border-2 p-4 transition-all',
+                  !hasDue && 'opacity-40 cursor-not-allowed',
+                  hasDue && 'cursor-pointer',
+                  hasDue && isSelected
                     ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
+                    : hasDue
+                      ? 'border-border hover:border-primary/50'
+                      : 'border-border',
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -322,6 +354,75 @@ function StudyPageContent() {
                   </div>
                   <span className="font-medium">{cat}</span>
                 </div>
+                <Badge variant={hasDue ? 'secondary' : 'outline'}>
+                  {dueCount} due
+                </Badge>
+              </div>
+            );
+          })}
+        </div>
+
+        <Button
+          className="w-full"
+          size="lg"
+          disabled={selectedCategories.size === 0}
+          onClick={handleStartStudy}
+        >
+          Start Review ({selectedDueCount} questions)
+        </Button>
+      </div>
+    );
+  }
+
+  // Phase: Topic Selection (By Topic mode)
+  if (phase === 'topic-select') {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => setPhase('mode-select')}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold">Select Topics</h1>
+            <p className="text-sm text-muted-foreground">Choose which categories to study.</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <Button variant="outline" size="sm" onClick={() => {
+            if (selectedCategories.size === categories.length) setSelectedCategories(new Set());
+            else setSelectedCategories(new Set(categories));
+          }}>
+            {selectedCategories.size === categories.length ? 'Deselect All' : 'Select All'}
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            {selectedCategories.size} of {categories.length} selected
+          </span>
+        </div>
+
+        <div className="space-y-2">
+          {categories.map((cat) => {
+            const catCount = allQuestions.filter((q) => q.category === cat).length;
+            const isSelected = selectedCategories.has(cat);
+
+            return (
+              <div
+                key={cat}
+                onClick={() => handleToggleCategory(cat)}
+                className={cn(
+                  'flex cursor-pointer items-center justify-between rounded-lg border-2 p-4 transition-all',
+                  isSelected ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    'flex h-5 w-5 items-center justify-center rounded border-2 transition-colors',
+                    isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground'
+                  )}>
+                    {isSelected && <Check className="h-3 w-3" />}
+                  </div>
+                  <span className="font-medium">{cat}</span>
+                </div>
                 <Badge variant="outline">{catCount}</Badge>
               </div>
             );
@@ -332,7 +433,7 @@ function StudyPageContent() {
           className="w-full"
           size="lg"
           disabled={selectedCategories.size === 0}
-          onClick={handleStartTopicStudy}
+          onClick={handleStartStudy}
         >
           Start Study ({allQuestions.filter((q) => selectedCategories.has(q.category)).length} questions)
         </Button>
@@ -340,15 +441,13 @@ function StudyPageContent() {
     );
   }
 
-  // Phase 3: Quiz
+  // Phase: Quiz
   if (phase === 'quiz') {
-    if (quizQuestions.length === 0) {
+    if (quizQuestions.length === 0 && !resumeSession) {
       return (
         <div className="mx-auto max-w-md text-center space-y-4 py-12">
-          <p className="text-lg text-muted-foreground">
-            No questions available for this mode.
-          </p>
-          <Button onClick={handleStudyAgain}>
+          <p className="text-lg text-muted-foreground">No questions available for this mode.</p>
+          <Button onClick={handleBackToStudy}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Mode Selection
           </Button>
@@ -359,79 +458,18 @@ function StudyPageContent() {
     return (
       <div className="mx-auto max-w-3xl">
         <StudySession
+          key={resumeSession?.id ?? selectedMode}
           questions={quizQuestions}
           topic={topicLabel}
           mode={selectedMode ?? 'all'}
-          selectedTopics={selectedMode === 'topic' ? Array.from(selectedCategories) : undefined}
+          selectedTopics={Array.from(selectedCategories)}
+          isRetry={resumeSession?.isRetry}
+          parentSessionId={resumeSession?.parentSessionId}
+          resumeSession={resumeSession}
           onComplete={handleComplete}
-          onRetryMissed={(retrySession) => {
-            // Retry missed: the orchestrator has already set up the new ActiveSession,
-            // just transition back to quiz phase so the component re-mounts with
-            // the retry session picked up from storage on next load.
-            // For now we simply reset to mode-select so the user can restart.
-            handleStudyAgain();
-          }}
-          onBackToStudy={handleStudyAgain}
+          onRetryMissed={handleRetryMissed}
+          onBackToStudy={handleBackToStudy}
         />
-      </div>
-    );
-  }
-
-  // Phase 4: Summary
-  if (phase === 'summary' && completedSession) {
-    const { correctAnswers, totalQuestions, accuracy, duration } =
-      completedSession;
-
-    return (
-      <div className="mx-auto max-w-md space-y-6">
-        <Card className="border-2 text-center">
-          <CardHeader>
-            <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10">
-              <Trophy className="h-8 w-8 text-amber-400" />
-            </div>
-            <CardTitle className="text-2xl">Session Complete!</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <p className="text-5xl font-bold">{accuracy}%</p>
-              <p className="text-muted-foreground">
-                {correctAnswers} of {totalQuestions} correct
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-emerald-400">
-                  Correct: {correctAnswers}
-                </span>
-                <span className="text-red-400">
-                  Incorrect: {totalQuestions - correctAnswers}
-                </span>
-              </div>
-              <Progress value={accuracy} className="h-2" />
-            </div>
-
-            <div className="rounded-lg bg-muted/30 p-3">
-              <p className="text-sm text-muted-foreground">
-                Time spent:{' '}
-                <span className="font-semibold text-foreground">
-                  {formatDuration(duration)}
-                </span>
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button onClick={handleStudyAgain} variant="outline" size="lg">
-                <RotateCcw className="mr-2 h-4 w-4" />
-                Study Again
-              </Button>
-              <Button onClick={() => router.push('/')} size="lg">
-                <Home className="mr-2 h-4 w-4" />
-                Back to Home
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     );
   }
