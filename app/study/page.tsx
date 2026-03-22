@@ -361,7 +361,17 @@ function StudyPageContent() {
         <StudySession
           questions={quizQuestions}
           topic={topicLabel}
+          mode={selectedMode ?? 'all'}
+          selectedTopics={selectedMode === 'topic' ? Array.from(selectedCategories) : undefined}
           onComplete={handleComplete}
+          onRetryMissed={(retrySession) => {
+            // Retry missed: the orchestrator has already set up the new ActiveSession,
+            // just transition back to quiz phase so the component re-mounts with
+            // the retry session picked up from storage on next load.
+            // For now we simply reset to mode-select so the user can restart.
+            handleStudyAgain();
+          }}
+          onBackToStudy={handleStudyAgain}
         />
       </div>
     );
