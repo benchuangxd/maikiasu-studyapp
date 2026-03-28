@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Home, FileQuestion, BookOpen, BarChart3, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,15 @@ export function Navbar(): React.ReactElement {
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         {/* Left: App name */}
-        <Link href="/" className="text-lg font-bold tracking-tight">
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+          <Image
+            src="/android-chrome-192x192.png"
+            alt="MaiKiasu logo"
+            width={28}
+            height={28}
+            className="rounded-md"
+            priority
+          />
           MaiKiasu
         </Link>
 
@@ -70,8 +79,17 @@ export function Navbar(): React.ReactElement {
             </SheetTrigger>
             <SheetContent side="right" className="w-64">
               <SheetHeader>
-                <SheetTitle className="text-left text-lg font-bold">
-                  MaiKiasu
+                <SheetTitle className="text-left">
+                  <span className="flex items-center gap-2 text-lg font-bold">
+                    <Image
+                      src="/android-chrome-192x192.png"
+                      alt="MaiKiasu logo"
+                      width={24}
+                      height={24}
+                      className="rounded-md"
+                    />
+                    MaiKiasu
+                  </span>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">

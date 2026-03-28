@@ -32,13 +32,17 @@ interface QuestionListProps {
 
 const questionTypeLabel: Record<QuestionType, string> = {
   [QuestionType.MULTIPLE_CHOICE]: 'MCQ',
+  [QuestionType.MULTI_SELECT]: 'Multi',
   [QuestionType.SORTING]: 'Sort',
+  [QuestionType.MATCHING]: 'Match',
   [QuestionType.FILL_IN_BLANK]: 'Fill-in',
 };
 
 const questionTypeColor: Record<QuestionType, string> = {
   [QuestionType.MULTIPLE_CHOICE]: 'bg-chart-1/20 text-chart-1 border-chart-1/30',
+  [QuestionType.MULTI_SELECT]: 'bg-chart-3/20 text-chart-3 border-chart-3/30',
   [QuestionType.SORTING]: 'bg-chart-2/20 text-chart-2 border-chart-2/30',
+  [QuestionType.MATCHING]: 'bg-chart-5/20 text-chart-5 border-chart-5/30',
   [QuestionType.FILL_IN_BLANK]: 'bg-chart-4/20 text-chart-4 border-chart-4/30',
 };
 

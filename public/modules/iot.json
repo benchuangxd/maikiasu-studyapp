@@ -1,0 +1,2771 @@
+[
+   {
+      "question":"The various factors (range, power, data rate, scalability, security and cost) have the same level of importance in any IoT solution.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":1,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"False"
+   },
+   {
+      "question":"Which of the following technology uses 2.4Ghz frequency?",
+      "type":"multiple",
+      "options":[
+         "Bluetooth/BLE",
+         "Z-Wave",
+         "ZigBee",
+         "Weightless",
+         "Wireless HART",
+         "WiFi",
+         "SigFox",
+         "NB-IoT",
+         "LoRa",
+         "2G/3G"
+      ],
+      "source_page":1,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":[
+         "Bluetooth/BLE",
+         "ZigBee",
+         "Wireless HART",
+         "WiFi",
+         "LoRa"
+      ],
+      "note":"PDF annotation says \"Lora not in the notes but gives correct answer\"."
+   },
+   {
+      "question":"Arrange the various layers for the IoT Reference Model, assuming the following sequence: 7. Collaboration & Processes, 6. Application.",
+      "type":"matching",
+      "options":[
+         "Data Abstraction",
+         "Data Accumulation",
+         "Physical Devices & Controller",
+         "Connectivity",
+         "Edge Computing"
+      ],
+      "source_page":2,
+      "chapter":"1. Introduction to IoT Comms",
+      "match_targets":{
+         "Data Abstraction":"5",
+         "Data Accumulation":"4",
+         "Physical Devices & Controller":"1",
+         "Connectivity":"2",
+         "Edge Computing":"3"
+      },
+      "answer":{
+         "Data Abstraction":"5",
+         "Data Accumulation":"4",
+         "Physical Devices & Controller":"1",
+         "Connectivity":"2",
+         "Edge Computing":"3"
+      }
+   },
+   {
+      "question":"IoT refers to ... (select the best answer)",
+      "type":"single",
+      "options":[
+         "Interconnections of devices in a network",
+         "Exchange of data between devices in a network",
+         "All of them.",
+         "An ecosystem of devices, accessible through internet"
+      ],
+      "source_page":2,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"All of them."
+   },
+   {
+      "question":"Which choice represents the ultimate aim for IoT.",
+      "type":"single",
+      "options":[
+         "To connect as many 'things' together",
+         "To transform raw data into insights",
+         "To collect as much data as possible",
+         "To reduce network bandwidth"
+      ],
+      "source_page":3,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"To transform raw data into insights"
+   },
+   {
+      "question":"Which of the following allows a bunch of heterogeneous systems to communicate and interact with each other?",
+      "type":"single",
+      "options":[
+         "Operating System",
+         "Hardware",
+         "Application",
+         "Middleware"
+      ],
+      "source_page":3,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"Middleware"
+   },
+   {
+      "question":"Which of the following supports the longest range?",
+      "type":"single",
+      "options":[
+         "WiFi",
+         "ZigBee",
+         "BLE",
+         "LoRa"
+      ],
+      "source_page":3,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"LoRa"
+   },
+   {
+      "question":"Which of the following is NOT a component in an IoT device.",
+      "type":"single",
+      "options":[
+         "Controller",
+         "Sensor",
+         "Power Supply",
+         "Communication",
+         "Actuator"
+      ],
+      "source_page":3,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"Power Supply"
+   },
+   {
+      "question":"Devices in IoT support ... (select the best answer)",
+      "type":"single",
+      "options":[
+         "Actuating",
+         "Data collection",
+         "Sensing",
+         "All of them"
+      ],
+      "source_page":4,
+      "chapter":"1. Introduction to IoT Comms",
+      "answer":"All of them"
+   },
+   {
+      "question":"Match the following terms to the most appropriate description.",
+      "type":"matching",
+      "options":[
+         "1. focus on anytime/anywhere computing",
+         "2. focus on time constraints",
+         "3. not necessarily connected",
+         "4. focus on interaction between physical and cyber systems"
+      ],
+      "source_page":4,
+      "chapter":"1. Introduction to IoT Comms",
+      "match_targets":{
+         "Pervasive/Ubiquitous Computing":"1. focus on anytime/anywhere computing",
+         "Real-time Systems":"2. focus on time constraints",
+         "Embedded Systems":"3. not necessarily connected",
+         "Cyber-Physical Systems":"4. focus on interaction between physical and cyber systems"
+      },
+      "answer":{
+         "Pervasive/Ubiquitous Computing":"1. focus on anytime/anywhere computing",
+         "Real-time Systems":"2. focus on time constraints",
+         "Embedded Systems":"3. not necessarily connected",
+         "Cyber-Physical Systems":"4. focus on interaction between physical and cyber systems"
+      }
+   },
+   {
+      "question":"What does idempotence mean in the context of RESTful APIs?",
+      "type":"single",
+      "options":[
+         "The API produces different results with each request",
+         "The API encrypts data for security",
+         "The API produces the same result no matter how many times the same request is made",
+         "The API can handle asynchronous requests"
+      ],
+      "source_page":5,
+      "chapter":"2. HTTP & REST",
+      "answer":"The API produces the same result no matter how many times the same request is made"
+   },
+   {
+      "question":"What mechanism does RESTful APIs use to indicate the current state of the resource?",
+      "type":"single",
+      "options":[
+         "HTTP headers",
+         "HTTP status codes",
+         "API tokens",
+         "Response body"
+      ],
+      "source_page":5,
+      "chapter":"2. HTTP & REST",
+      "answer":"HTTP status codes"
+   },
+   {
+      "question":"Which of the following is NOT a constraint of RESTful architecture?",
+      "type":"single",
+      "options":[
+         "Client-server architecture",
+         "Cookie-based authentication",
+         "Cacheability",
+         "Statelessness"
+      ],
+      "source_page":5,
+      "chapter":"2. HTTP & REST",
+      "answer":"Cookie-based authentication"
+   },
+   {
+      "question":"Which HTTP status code indicates a successful GET request in a RESTful API?",
+      "type":"single",
+      "options":[
+         "201 Created",
+         "500 Internal Server Error",
+         "400 Bad Request",
+         "200 OK"
+      ],
+      "source_page":5,
+      "chapter":"2. HTTP & REST",
+      "answer":"200 OK"
+   },
+   {
+      "question":"In RESTful APIs, what does a status code in the 5xx range signify?",
+      "type":"single",
+      "options":[
+         "Client error",
+         "Server error",
+         "Redirection",
+         "Successful operation"
+      ],
+      "source_page":6,
+      "chapter":"2. HTTP & REST",
+      "answer":"Server error"
+   },
+   {
+      "question":"What is the HTTP method used to create a new resource in RESTful architecture?",
+      "type":"single",
+      "options":[
+         "POST",
+         "GET",
+         "PUT",
+         "DELETE"
+      ],
+      "source_page":6,
+      "chapter":"2. HTTP & REST",
+      "answer":"POST"
+   },
+   {
+      "question":"What is a resource in the context of RESTful web services?",
+      "type":"single",
+      "options":[
+         "A set of procedures for accessing a database",
+         "An entity that can be accessed and manipulated through a URI",
+         "A function that performs a specific action",
+         "A container for storing data in a web application"
+      ],
+      "source_page":6,
+      "chapter":"2. HTTP & REST",
+      "answer":"An entity that can be accessed and manipulated through a URI"
+   },
+   {
+      "question":"Which of the following HTTP methods is used to retrieve a resource in RESTful architecture?",
+      "type":"single",
+      "options":[
+         "GET",
+         "DELETE",
+         "PUT",
+         "POST"
+      ],
+      "source_page":6,
+      "chapter":"2. HTTP & REST",
+      "answer":"GET"
+   },
+   {
+      "question":"What is the primary role of a RESTful API's Uniform Interface constraint?",
+      "type":"single",
+      "options":[
+         "To standardize the way clients interact with the server",
+         "To separate client and server implementations",
+         "To define specific operations like GET and POST",
+         "To ensure that the API is stateful"
+      ],
+      "source_page":6,
+      "chapter":"2. HTTP & REST",
+      "answer":"To standardize the way clients interact with the server"
+   },
+   {
+      "question":"Which HTTP method should be used to update an existing resource in RESTful web services?",
+      "type":"single",
+      "options":[
+         "POST",
+         "GET",
+         "DELETE",
+         "PUT"
+      ],
+      "source_page":7,
+      "chapter":"2. HTTP & REST",
+      "answer":"PUT"
+   },
+   {
+      "question":"In RESTful APIs, what is the purpose of a payload in a POST request?",
+      "type":"single",
+      "options":[
+         "To carry control information",
+         "To provide additional headers",
+         "To contain the data being sent by the client",
+         "To deliver the client's request to the server"
+      ],
+      "source_page":7,
+      "chapter":"2. HTTP & REST",
+      "answer":"To contain the data being sent by the client"
+   },
+   {
+      "question":"In RESTful APIs, what is used to uniquely identify a resource?",
+      "type":"single",
+      "options":[
+         "API key",
+         "URI (Uniform Resource Identifier)",
+         "Query parameters",
+         "Session ID"
+      ],
+      "source_page":7,
+      "chapter":"2. HTTP & REST",
+      "answer":"URI (Uniform Resource Identifier)"
+   },
+   {
+      "question":"What does REST stand for?",
+      "type":"single",
+      "options":[
+         "Relative State Transmission",
+         "Real-time State Transfer",
+         "Remote Server Transaction",
+         "Representational State Transfer"
+      ],
+      "source_page":7,
+      "chapter":"2. HTTP & REST",
+      "answer":"Representational State Transfer"
+   },
+   {
+      "question":"What type of architecture does RESTful APIs follow?",
+      "type":"single",
+      "options":[
+         "Client-server architecture",
+         "Monolithic architecture",
+         "Microservices architecture",
+         "Peer-to-peer architecture",
+         "Publisher-Subscriber architecture"
+      ],
+      "source_page":7,
+      "chapter":"2. HTTP & REST",
+      "answer":"Client-server architecture"
+   },
+   {
+      "question":"Which layer is CoAP?",
+      "type":"single",
+      "options":[
+         "Service layer",
+         "Control layer",
+         "Application layer",
+         "Transport layer"
+      ],
+      "source_page":8,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Application layer"
+   },
+   {
+      "question":"What type of protocol is MQTT?",
+      "type":"single",
+      "options":[
+         "Transport protocol",
+         "Network protocol",
+         "Presentation protocol",
+         "Application protocol"
+      ],
+      "source_page":8,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Application protocol"
+   },
+   {
+      "question":"CoAP is specialized in?",
+      "type":"single",
+      "options":[
+         "Wireless applications",
+         "Wired applications",
+         "Internet applications",
+         "Device applications"
+      ],
+      "source_page":8,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Internet applications"
+   },
+   {
+      "question":"MQTT transmits data to and from a broker in which format. (Choose the best option)",
+      "type":"single",
+      "options":[
+         "XML",
+         "Binary data",
+         "JSON",
+         "Text based data"
+      ],
+      "source_page":8,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Binary data"
+   },
+   {
+      "question":"What is the default port number for MQTT?",
+      "type":"single",
+      "options":[
+         "1883",
+         "8080",
+         "8883",
+         "80"
+      ],
+      "source_page":8,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"1883",
+      "note":"PDF annotation says \"Typo? Default port number is 1883\"."
+   },
+   {
+      "question":"What is the maximum number of clients that can subscribe to a single topic in MQTT?",
+      "type":"single",
+      "options":[
+         "1",
+         "10",
+         "Unlimited",
+         "100"
+      ],
+      "source_page":9,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Unlimited"
+   },
+   {
+      "question":"To receive a retained message?",
+      "type":"single",
+      "options":[
+         "You must subscribe with a QOS of 1 or 2",
+         "You must subscribe with the retained message set.",
+         "You must subscribe to a topic that has been published with the retained message set.",
+         "You must keep the message."
+      ],
+      "source_page":9,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"You must subscribe to a topic that has been published with the retained message set."
+   },
+   {
+      "question":"What is a topic in MQTT?",
+      "type":"single",
+      "options":[
+         "A string used to filter messages in a publish/subscribe model",
+         "A client identifier",
+         "A unique identifier for a message",
+         "A message payload"
+      ],
+      "source_page":9,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"A string used to filter messages in a publish/subscribe model"
+   },
+   {
+      "question":"CoAP is designed for which kind of networks?",
+      "type":"single",
+      "options":[
+         "Wide Area Networks (WAN)",
+         "Resource-constrained networks",
+         "Local Area Networks (LAN)",
+         "Datacenter Networks"
+      ],
+      "source_page":9,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Resource-constrained networks"
+   },
+   {
+      "question":"CoAP Protocol is comprised of which sub-layers?",
+      "type":"multiple",
+      "options":[
+         "Observation",
+         "UDP",
+         "Message",
+         "Request & Response"
+      ],
+      "source_page":9,
+      "chapter":"3. CoAP & MQTT",
+      "answer":[
+         "Message",
+         "Request & Response"
+      ]
+   },
+   {
+      "question":"CoAP supports which of the following methods similar to HTTP?",
+      "type":"single",
+      "options":[
+         "None of them",
+         "GET, POST, PUT, DELETE",
+         "OPTIONS, HEAD",
+         "CONNECT, TRACE, PATCH"
+      ],
+      "source_page":10,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"GET, POST, PUT, DELETE"
+   },
+   {
+      "question":"MQTT is ________ oriented.",
+      "type":"single",
+      "options":[
+         "Data",
+         "Message",
+         "Device",
+         "Network"
+      ],
+      "source_page":10,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Message"
+   },
+   {
+      "question":"Which protocol is CoAP closely modeled after?",
+      "type":"single",
+      "options":[
+         "MQTT",
+         "FTP",
+         "HTTP",
+         "AMQP"
+      ],
+      "source_page":10,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"HTTP"
+   },
+   {
+      "question":"What does CoAP stand for?",
+      "type":"single",
+      "options":[
+         "Control Application Protocol",
+         "Compact Application Protocol",
+         "Common Application Protocol",
+         "Constrained Application Protocol"
+      ],
+      "source_page":10,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Constrained Application Protocol"
+   },
+   {
+      "question":"The Last Will Message is used to:",
+      "type":"single",
+      "options":[
+         "Notify clients of a failure in the publisher",
+         "Guarantee that the message was delivered",
+         "Notify a publisher of a network failure",
+         "Gain inheritance"
+      ],
+      "source_page":10,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Notify clients of a failure in the publisher"
+   },
+   {
+      "question":"CoAP is a specialised ________ protocol.",
+      "type":"single",
+      "options":[
+         "Web transfer",
+         "Power",
+         "Resource",
+         "Application"
+      ],
+      "source_page":11,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Application"
+   },
+   {
+      "question":"Select the TRUE statement(s) for CoAP protocol?",
+      "type":"multiple",
+      "options":[
+         "Uses GET message requests to retrieve subscription.",
+         "Uses PUSH message requests to create subscription.",
+         "Uses PUT message requests to create subscription.",
+         "Uses FETCH message requests to retrieve subscription."
+      ],
+      "source_page":11,
+      "chapter":"3. CoAP & MQTT",
+      "answer":[
+         "Uses GET message requests to retrieve subscription.",
+         "Uses PUT message requests to create subscription."
+      ]
+   },
+   {
+      "question":"MQTT uses the publish/subscribe model. How does the publisher know who is subscribing?",
+      "type":"single",
+      "options":[
+         "Publisher uses the \"Eye of Sauron\"",
+         "The publisher doesn't know",
+         "The publisher gets notified when they subscribe.",
+         "The subscriber informs the publisher"
+      ],
+      "source_page":11,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"The publisher doesn't know"
+   },
+   {
+      "question":"CoAP messages can be of which types?",
+      "type":"single",
+      "options":[
+         "Request and Response",
+         "Synchronous and Asynchronous",
+         "Persistent and Transient",
+         "Confirmable and Non-Confirmable"
+      ],
+      "source_page":11,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Confirmable and Non-Confirmable"
+   },
+   {
+      "question":"CoAP provides which of the following requirements?",
+      "type":"single",
+      "options":[
+         "Simplicity and low overhead",
+         "Multicast support, lower overhead and simplicity",
+         "Multicast support and simplicity",
+         "Lower overhead and multicast support"
+      ],
+      "source_page":11,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Multicast support, lower overhead and simplicity"
+   },
+   {
+      "question":"Which of the following is not a client type in MQTT?",
+      "type":"single",
+      "options":[
+         "Publisher",
+         "Producer",
+         "Subscriber",
+         "Broker"
+      ],
+      "source_page":12,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Producer"
+   },
+   {
+      "question":"Which of the following QoS levels in MQTT ensures message delivery at least once?",
+      "type":"single",
+      "options":[
+         "QoS 1",
+         "QoS 0",
+         "QoS 2",
+         "None of them."
+      ],
+      "source_page":12,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"QoS 1"
+   },
+   {
+      "question":"Which of the following is not a characteristic of MQTT?",
+      "type":"single",
+      "options":[
+         "Quality of Service (QoS)",
+         "Low overhead",
+         "Publish/subscribe messaging model",
+         "Request/response messaging model"
+      ],
+      "source_page":12,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"Request/response messaging model"
+   },
+   {
+      "question":"What transport layer protocol does CoAP use?",
+      "type":"single",
+      "options":[
+         "REST",
+         "UDP",
+         "ICMP",
+         "TCP"
+      ],
+      "source_page":12,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"UDP"
+   },
+   {
+      "question":"What transport layer protocol does CoAP use?",
+      "type":"single",
+      "options":[
+         "REST",
+         "UDP",
+         "ICMP",
+         "TCP"
+      ],
+      "source_page":12,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"UDP"
+   },
+   {
+      "question":"The core of the protocol is specified in ______?",
+      "type":"single",
+      "options":[
+         "RFC 7252",
+         "RFC 7452",
+         "RFC 7524",
+         "RFC 7254"
+      ],
+      "source_page":13,
+      "chapter":"3. CoAP & MQTT",
+      "answer":"RFC 7252"
+   },
+   {
+      "question":"The Optimized Link State Routing (OLSR) protocol uses ______ to optimize transmission.",
+      "type":"single",
+      "options":[
+         "Dual point relays",
+         "Single point relays",
+         "Multipoint relays",
+         "No relays"
+      ],
+      "source_page":14,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Multipoint relays"
+   },
+   {
+      "question":"What is the primary feature of a wireless mesh network?",
+      "type":"single",
+      "options":[
+         "Centralized architecture",
+         "Decentralized architecture",
+         "Limited to indoor use only",
+         "Single-hop communication"
+      ],
+      "source_page":14,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Decentralized architecture"
+   },
+   {
+      "question":"Which of the following is not a reactive mesh routing algorithm?",
+      "type":"multiple",
+      "options":[
+         "Temporally-Ordered Routing Algorithm",
+         "Wireless Routing Protocol",
+         "Dynamic Source Routing",
+         "Optimized Link State Routing",
+         "Destination-Sequenced Distance Vector",
+         "Ad hoc On-Demand Distance Vector",
+         "Better Approach To Mobile Adhoc Networking"
+      ],
+      "source_page":14,
+      "chapter":"4. Wireless Mesh",
+      "answer":[
+         "Wireless Routing Protocol",
+         "Optimized Link State Routing",
+         "Destination-Sequenced Distance Vector",
+         "Better Approach To Mobile Adhoc Networking"
+      ]
+   },
+   {
+      "question":"Which of the following is not a proactive mesh routing algorithm?",
+      "type":"multiple",
+      "options":[
+         "Ad hoc On-Demand Distance Vector",
+         "Wireless Routing Protocol",
+         "Better Approach To Mobile Adhoc Networking",
+         "Destination-Sequenced Distance Vector",
+         "Optimized Link State Routing",
+         "Dynamic Source Routing",
+         "Temporally-Ordered Routing Algorithm"
+      ],
+      "source_page":14,
+      "chapter":"4. Wireless Mesh",
+      "answer":[
+         "Ad hoc On-Demand Distance Vector",
+         "Dynamic Source Routing",
+         "Temporally-Ordered Routing Algorithm"
+      ]
+   },
+   {
+      "question":"Which flooding algorithm divides the network into subnets for routing?",
+      "type":"single",
+      "options":[
+         "Selective Flooding",
+         "Simple Flooding",
+         "Reduced Flooding",
+         "Adaptive Flooding"
+      ],
+      "source_page":15,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Reduced Flooding"
+   },
+   {
+      "question":"What is a disadvantage of simple flooding in mesh networks?",
+      "type":"single",
+      "options":[
+         "Maximum use of battery power",
+         "It generates a large number of redundant messages",
+         "It is too simple to implement",
+         "Lack of data security"
+      ],
+      "source_page":15,
+      "chapter":"4. Wireless Mesh",
+      "answer":"It generates a large number of redundant messages"
+   },
+   {
+      "question":"In a distributed mesh network, how are routes between nodes established?",
+      "type":"single",
+      "options":[
+         "All communication goes through a master node",
+         "Nodes communicate to determine adjacency and routes",
+         "Through a central authority",
+         "Using a single, static route"
+      ],
+      "source_page":15,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Nodes communicate to determine adjacency and routes"
+   },
+   {
+      "question":"What is a typical method to prevent malicious nodes from joining a wireless mesh network?",
+      "type":"single",
+      "options":[
+         "Authentication",
+         "Ignoring new nodes",
+         "Decreasing signal strength",
+         "Redundancy"
+      ],
+      "source_page":15,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Authentication"
+   },
+   {
+      "question":"What does Adaptive Flooding adjust based on?",
+      "type":"single",
+      "options":[
+         "Network conditions and resource availability",
+         "Static configurations",
+         "Number of connected nodes",
+         "The time of day"
+      ],
+      "source_page":15,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Number of connected nodes"
+   },
+   {
+      "question":"Which characteristic is not a feature of wireless mesh networking?",
+      "type":"single",
+      "options":[
+         "Efficient data routing",
+         "Scalability",
+         "Self-healing",
+         "Centralized architecture"
+      ],
+      "source_page":16,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Centralized architecture"
+   },
+   {
+      "question":"Which is not a challenge mentioned for wireless mesh networks?",
+      "type":"single",
+      "options":[
+         "Interference and reliability",
+         "Bandwidth allocation",
+         "Timing and synchronization",
+         "Unlimited bandwidth"
+      ],
+      "source_page":16,
+      "chapter":"4. Wireless Mesh",
+      "answer":"Unlimited bandwidth"
+   },
+   {
+      "question":"In the context of mesh networks, what does the term 'self-healing' refer to?",
+      "type":"single",
+      "options":[
+         "The ability to manually repair physical damage",
+         "The network's ability to automatically reroute data if a node fails",
+         "The process of adding new nodes to the network",
+         "Healing of hardware issues without human intervention"
+      ],
+      "source_page":16,
+      "chapter":"4. Wireless Mesh",
+      "answer":"The network's ability to automatically reroute data if a node fails"
+   },
+   {
+      "question":"Dynamic Source Routing have multiple routes per destination",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":16,
+      "chapter":"4. Wireless Mesh",
+      "answer":"True"
+   },
+   {
+      "question":"Optimized Link State Routing Protocol uses triggered updates of their routing table whenever there is a topology change.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":16,
+      "chapter":"4. Wireless Mesh",
+      "answer":"False"
+   },
+   {
+      "question":"In LoRa, which class does the following end device fall under: Battery powered actuators. Energy efficient with latency controlled downlink. Slotted communication synchronized with a beacon.",
+      "type":"single",
+      "options":[
+         "C",
+         "A",
+         "B",
+         "D"
+      ],
+      "source_page":17,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"B"
+   },
+   {
+      "question":"Which Class of LoRaWAN is best suited for applications requiring minimal latency?",
+      "type":"single",
+      "options":[
+         "Class D",
+         "Class A",
+         "Class C",
+         "Class B"
+      ],
+      "source_page":17,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Class C"
+   },
+   {
+      "question":"What is the main function of the Device EUI in LoRaWAN?",
+      "type":"single",
+      "options":[
+         "To define the device's operating frequency",
+         "To encrypt data",
+         "To specify the data rate",
+         "To identify the device uniquely on the network"
+      ],
+      "source_page":17,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"To identify the device uniquely on the network"
+   },
+   {
+      "question":"What does LoRaWAN stand for?",
+      "type":"single",
+      "options":[
+         "Low Range Wide Area Network",
+         "Low Radiation Wireless Access Network",
+         "Logical Routing WAN",
+         "Long Range Wide Area Network"
+      ],
+      "source_page":17,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Long Range Wide Area Network"
+   },
+   {
+      "question":"Which class of LoRaWAN is designed for bidirectional end-devices with scheduled receive slots?",
+      "type":"single",
+      "options":[
+         "Class C",
+         "Class B",
+         "Class D",
+         "Class A"
+      ],
+      "source_page":18,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Class B"
+   },
+   {
+      "question":"LoRaWAN modulation technique sits at which OSI layer?",
+      "type":"single",
+      "options":[
+         "Application",
+         "Session",
+         "Datalink",
+         "Network",
+         "Transport",
+         "Presentation",
+         "Physical"
+      ],
+      "source_page":18,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Datalink"
+   },
+   {
+      "question":"LoRa modulation technique sits at which OSI layer?",
+      "type":"single",
+      "options":[
+         "Datalink",
+         "Presentation",
+         "Application",
+         "Session",
+         "Transport",
+         "Physical",
+         "Network"
+      ],
+      "source_page":18,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Physical"
+   },
+   {
+      "question":"LoRa is primarily used for?",
+      "type":"single",
+      "options":[
+         "Long-range, low-power communication",
+         "High-speed data transmission",
+         "Audio and video transmission",
+         "Short-range communication"
+      ],
+      "source_page":18,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Long-range, low-power communication"
+   },
+   {
+      "question":"Link Budget ...",
+      "type":"single",
+      "options":[
+         "refers to the amount of loss that a data link (transmitter to receiver) should have.",
+         "refers to the difference between the minimum expected power received at the receiver's end, and the receiver's sensitivity.",
+         "refers to a connection between two entities.",
+         "refers to the amount of loss that a data link (transmitter to receiver) can tolerate in order to operate properly."
+      ],
+      "source_page":19,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"refers to the amount of loss that a data link (transmitter to receiver) can tolerate in order to operate properly."
+   },
+   {
+      "question":"What does LoRa stand for?",
+      "type":"single",
+      "options":[
+         "Low Range",
+         "Long Range",
+         "Long Radio",
+         "Long Resonance"
+      ],
+      "source_page":19,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Long Range"
+   },
+   {
+      "question":"What type of modulation is used in LoRa?",
+      "type":"single",
+      "options":[
+         "Chirp Spread Spectrum (CSS)",
+         "Phase-Shift Keying (PSK)",
+         "Frequency Shift Keying (FSK)",
+         "Amplitude Modulation (AM)"
+      ],
+      "source_page":19,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Chirp Spread Spectrum (CSS)"
+   },
+   {
+      "question":"What is the main drawback of using LoRa for IoT applications?",
+      "type":"single",
+      "options":[
+         "Limited data rate",
+         "Short range",
+         "Long range",
+         "High power consumption"
+      ],
+      "source_page":19,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Limited data rate"
+   },
+   {
+      "question":"In LoRa, what does increasing the spreading factor (SF) do to the signal's range and data rate?",
+      "type":"single",
+      "options":[
+         "Decreases range and increases data rate",
+         "Increases range and decreases data rate",
+         "Increases range and data rate",
+         "Decreases both range and data rate"
+      ],
+      "source_page":20,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Increases range and decreases data rate"
+   },
+   {
+      "question":"LoRa's spreading factor affects which of the following?",
+      "type":"single",
+      "options":[
+         "Power consumption only",
+         "Modulation technique",
+         "Operating frequency",
+         "Data rate and range"
+      ],
+      "source_page":20,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Data rate and range"
+   },
+   {
+      "question":"Which Sub-GHz ISM frequency does LoRa operate in Singapore?",
+      "type":"single",
+      "options":[
+         "2.4 Ghz",
+         "923 Mhz",
+         "868 Mhz",
+         "466 Mhz"
+      ],
+      "source_page":20,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"923 Mhz"
+   },
+   {
+      "question":"LoRa modulation a variation of ....",
+      "type":"single",
+      "options":[
+         "Chirp Spectrum Sector",
+         "Chord Spread Spectrum",
+         "Chord Space Spectrum",
+         "Chirp Spread Spectrum"
+      ],
+      "source_page":20,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Chirp Spread Spectrum"
+   },
+   {
+      "question":"LoRaWAN's network server is responsible for:",
+      "type":"single",
+      "options":[
+         "Directly interacting with end-user applications",
+         "Controlling the power output of end devices",
+         "Managing the radio frequency spectrum",
+         "Processing and forwarding data to application servers"
+      ],
+      "source_page":20,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":"Processing and forwarding data to application servers"
+   },
+   {
+      "question":"What is the main advantages of using LoRa for IoT applications?",
+      "type":"multiple",
+      "options":[
+         "High data rate",
+         "Low power consumption",
+         "Long range",
+         "Low data rate"
+      ],
+      "source_page":21,
+      "chapter":"5. LoRa & LoRaWAN",
+      "answer":[
+         "Low power consumption",
+         "Long range"
+      ]
+   },
+   {
+      "question":"Select the standards that are typically common across IEEE 802.",
+      "type":"multiple",
+      "options":[
+         "802.1 Bridging",
+         "802.3 Ethernet",
+         "802.16 WiMAX",
+         "802.17 Resilient Packet Ring",
+         "802.2 Logical Link Control"
+      ],
+      "source_page":22,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "802.1 Bridging",
+         "802.2 Logical Link Control"
+      ]
+   },
+   {
+      "question":"WiFi HaLow is also known as?",
+      "type":"single",
+      "options":[
+         "802.11F",
+         "802.11ac",
+         "802.11ah"
+      ],
+      "source_page":22,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"802.11ah"
+   },
+   {
+      "question":"Which of the following power management modes are available for stations in 802.11 networks? (You can choose more than one answer)",
+      "type":"multiple",
+      "options":[
+         "Power Save Mode",
+         "Doze Mode",
+         "Awake Mode",
+         "Active Mode"
+      ],
+      "source_page":22,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Power Save Mode",
+         "Active Mode"
+      ]
+   },
+   {
+      "question":"Which of the following is included in the beacon to notify stations about the buffered frames?",
+      "type":"single",
+      "options":[
+         "Traffic Intimation Map",
+         "Traffic Notification Map",
+         "Traffic Indication Map",
+         "Traffic Availability Map"
+      ],
+      "source_page":22,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Traffic Indication Map"
+   },
+   {
+      "question":"Which of the following channel access technique is used in HaLow?",
+      "type":"single",
+      "options":[
+         "Carrier Sense Multiple Access with Collision Anticipation",
+         "Carrier Sense Multiple Access with Collision Avoidance",
+         "Carrier Sense Multiple Access with Collision Prevention",
+         "Carrier Sense Multiple Access with Collision Detection"
+      ],
+      "source_page":23,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Carrier Sense Multiple Access with Collision Avoidance"
+   },
+   {
+      "question":"Select the true statements for WiFi",
+      "type":"multiple",
+      "options":[
+         "Its frequency ranges from 2.4Ghz to 2.5Ghz",
+         "The 5Ghz Band has a 150Mhz bandwidth",
+         "Its frequency ranges from 5Ghz to 5.15Ghz",
+         "The 2.4Ghz Band has a 150Mhz bandwidth"
+      ],
+      "source_page":23,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Its frequency ranges from 2.4Ghz to 2.5Ghz",
+         "The 5Ghz Band has a 150Mhz bandwidth"
+      ]
+   },
+   {
+      "question":"What is the operating frequency of HaLow?",
+      "type":"single",
+      "options":[
+         "900 Hz",
+         "Sub-1 Ghz",
+         "2.4 Ghz",
+         "5 Ghz"
+      ],
+      "source_page":23,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Sub-1 Ghz"
+   },
+   {
+      "question":"All 802.11 devices are compatible with each other.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":23,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"True"
+   },
+   {
+      "question":"What is the typical range of HaLow compared to traditional Wi-Fi?",
+      "type":"single",
+      "options":[
+         "Longer range",
+         "Shorter range",
+         "Unlimited range",
+         "Same range"
+      ],
+      "source_page":23,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Longer range"
+   },
+   {
+      "question":"Which of the following packets help in solving the hidden node problem in 802.11 networks? (You can select more than one answer)",
+      "type":"multiple",
+      "options":[
+         "Clear To Send Packet",
+         "Request To Send Packet",
+         "Clear to Share Packet",
+         "Request to Share Packet",
+         "Acknowledgement Packets"
+      ],
+      "source_page":24,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Clear To Send Packet",
+         "Request To Send Packet"
+      ]
+   },
+   {
+      "question":"How many overlapping WiFi channels are there for 2.4Ghz Band?",
+      "type":"single",
+      "options":[
+         "14",
+         "3",
+         "12",
+         "11"
+      ],
+      "source_page":24,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"11"
+   },
+   {
+      "question":"Data communication in 802.11 happens ________ the OSI stack.",
+      "type":"single",
+      "options":[
+         "across",
+         "crisscross",
+         "down"
+      ],
+      "source_page":24,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"down"
+   },
+   {
+      "question":"Which standard does HaLow follow for wireless communication?",
+      "type":"single",
+      "options":[
+         "802.11ah",
+         "802.11ac",
+         "802.11n",
+         "802.11b"
+      ],
+      "source_page":24,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"802.11ah"
+   },
+   {
+      "question":"Using which one of the following parameters will the modulation and coding scheme be decided?",
+      "type":"single",
+      "options":[
+         "Data Transmission Rate",
+         "None of the options are correct.",
+         "Wireless Communication technique",
+         "Signal to Noise Ratio"
+      ],
+      "source_page":25,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Signal to Noise Ratio"
+   },
+   {
+      "question":"Which of the following are advantages of using Relays in HaLow? (select the correct answers)",
+      "type":"multiple",
+      "options":[
+         "Relays require the devices to transmit at a lower data rate thereby consuming low power.",
+         "Relays enable the devices to transmit at high data rate.",
+         "When a relay is present, the devices do not require to exchange data with the Root Access point.",
+         "Relays improve reliability of data transmission."
+      ],
+      "source_page":25,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Relays enable the devices to transmit at high data rate.",
+         "Relays improve reliability of data transmission."
+      ]
+   },
+   {
+      "question":"How does HaLow address the shortage of Duration/ID field that is required for Network Allocation Vector?",
+      "type":"single",
+      "options":[
+         "HaLow uses the Association ID for determining the length of the frame.",
+         "HaLow does not need any such mechanism as the length of the data payload is fixed.",
+         "HaLow introduced the Restricted Access Window mechanism for the same.",
+         "HaLow uses a mechanism called Response Indication Deferral."
+      ],
+      "source_page":25,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"HaLow uses a mechanism called Response Indication Deferral."
+   },
+   {
+      "question":"Consider the following two statements and select the appropriate option below: Statement A: Centralized and Distributed Authentication Control are introduced in HaLow to overcome collisions between the devices in the network. Statement B: HaLow introduced mechanisms to limit the set of devices accessing the channel and to spread their access attempts over a long period of time.",
+      "type":"single",
+      "options":[
+         "Statement A is true, but Statement B is false.",
+         "Statement B is true, but Statement A is false.",
+         "Statements A and B are true.",
+         "Both Statements are false."
+      ],
+      "source_page":25,
+      "chapter":"6. WiFi & HaLow",
+      "answer":"Statement B is true, but Statement A is false."
+   },
+   {
+      "question":"Which of the frames are transmitted by the Access Point when a node is attempting to join a Basic Service Set using active scanning? (You can select more than one)",
+      "type":"multiple",
+      "options":[
+         "Probe Response Frame",
+         "Association Request Frame",
+         "Association Response Frame",
+         "Probe Request Frame"
+      ],
+      "source_page":26,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Probe Response Frame",
+         "Association Response Frame"
+      ]
+   },
+   {
+      "question":"Which of the following frames are transmitted by a node when it is attempting to join a Basic Service Set using passive scanning? (You can select more than one)",
+      "type":"multiple",
+      "options":[
+         "Probe Request Frame",
+         "Association Request Frame",
+         "Probe Response Frame",
+         "Association Response Frame"
+      ],
+      "source_page":26,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Association Request Frame"
+      ]
+   },
+   {
+      "question":"What is the main advantages of HaLow over traditional Wi-Fi technologies?",
+      "type":"multiple",
+      "options":[
+         "Better security",
+         "Greater range",
+         "Lower power consumption",
+         "Faster speeds"
+      ],
+      "source_page":26,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "Greater range",
+         "Lower power consumption"
+      ]
+   },
+   {
+      "question":"Which of the following frames use the Null Data Packet (NDP) MAC frame structure in 802.11ah? (You can select more than one)",
+      "type":"multiple",
+      "options":[
+         "RTS",
+         "PS-Poll Frame",
+         "ACK",
+         "Beacons",
+         "CTS"
+      ],
+      "source_page":26,
+      "chapter":"6. WiFi & HaLow",
+      "answer":[
+         "RTS",
+         "ACK",
+         "CTS"
+      ]
+   },
+   {
+      "question":"Assume Bob can send 300 bits in one slot while using Bluetooth. How many slots does it take to send 600 bits?",
+      "type":"single",
+      "options":[
+         "67",
+         "3",
+         "100",
+         "60"
+      ],
+      "source_page":27,
+      "chapter":"7. Bluetooth",
+      "answer":"3"
+   },
+   {
+      "question":"What does BLE stand for?",
+      "type":"single",
+      "options":[
+         "Bluetooth Long Engagement",
+         "Bluetooth Low Efficiency",
+         "Bluetooth Low Energy",
+         "Basic Link Encryption"
+      ],
+      "source_page":27,
+      "chapter":"7. Bluetooth",
+      "answer":"Bluetooth Low Energy"
+   },
+   {
+      "question":"Which of the following scheme is used by Bluetooth?",
+      "type":"single",
+      "options":[
+         "Pyramid scheme",
+         "Frequency hopping TDD scheme",
+         "VWXYZ scheme",
+         "DSSS TDD scheme",
+         "Frequency hopping FDD scheme",
+         "ABCDEFG scheme",
+         "DSSS FDD scheme"
+      ],
+      "source_page":27,
+      "chapter":"7. Bluetooth",
+      "answer":"Frequency hopping TDD scheme"
+   },
+   {
+      "question":"Which version of Bluetooth introduced BLE?",
+      "type":"single",
+      "options":[
+         "Bluetooth 5.0",
+         "Bluetooth 4.0",
+         "Bluetooth 2.0",
+         "Bluetooth 3.0"
+      ],
+      "source_page":27,
+      "chapter":"7. Bluetooth",
+      "answer":"Bluetooth 4.0"
+   },
+   {
+      "question":"Which of the following supports low energy radio operation.",
+      "type":"single",
+      "options":[
+         "Bluetooth",
+         "BLE",
+         "HaLow",
+         "Wifi"
+      ],
+      "source_page":27,
+      "chapter":"7. Bluetooth",
+      "answer":"BLE"
+   },
+   {
+      "question":"What is the range typically achievable with BLE technology?",
+      "type":"single",
+      "options":[
+         "Up to 100 meters",
+         "Up to 150 meters",
+         "Up to 50 meters",
+         "Up to 10 meters"
+      ],
+      "source_page":28,
+      "chapter":"7. Bluetooth",
+      "answer":"Up to 100 meters"
+   },
+   {
+      "question":"What does 'Pairing' in BLE involve?",
+      "type":"single",
+      "options":[
+         "Connecting two devices for data transfer.",
+         "Exchanging security keys for secure communication.",
+         "Adjusting the power level for optimal connection.",
+         "Broadcasting data to multiple devices."
+      ],
+      "source_page":28,
+      "chapter":"7. Bluetooth",
+      "answer":"Exchanging security keys for secure communication."
+   },
+   {
+      "question":"What is a characteristic of BLE 'Advertising' mode?",
+      "type":"single",
+      "options":[
+         "High data transfer rate.",
+         "Long-range communication.",
+         "Secure data encryption.",
+         "Device discovery and connection establishment."
+      ],
+      "source_page":28,
+      "chapter":"7. Bluetooth",
+      "answer":"Device discovery and connection establishment."
+   },
+   {
+      "question":"What is the maximum data rate of latest BLE?",
+      "type":"single",
+      "options":[
+         "4 Mbps",
+         "1 Mbps",
+         "2 Mbps",
+         "3 Mbps"
+      ],
+      "source_page":28,
+      "chapter":"7. Bluetooth",
+      "answer":"2 Mbps"
+   },
+   {
+      "question":"Bluetooth is designed for short broadcast. There are forty 2-Mhz channels. How many of these channels are reserved for advertising? (enter numerical number)",
+      "type":"single",
+      "options":[
+         "57",
+         "3",
+         "100",
+         "69"
+      ],
+      "source_page":28,
+      "chapter":"7. Bluetooth",
+      "answer":"3"
+   },
+   {
+      "question":"BLE is particularly designed for:",
+      "type":"single",
+      "options":[
+         "Long-distance communication.",
+         "Audio streaming.",
+         "Short-range, low-power communication.",
+         "High-speed data transfer."
+      ],
+      "source_page":29,
+      "chapter":"7. Bluetooth",
+      "answer":"Short-range, low-power communication."
+   },
+   {
+      "question":"BLE supports which kind of communication topology?",
+      "type":"multiple",
+      "options":[
+         "Point-to-Point",
+         "Star",
+         "Bus",
+         "Mesh"
+      ],
+      "source_page":29,
+      "chapter":"7. Bluetooth",
+      "answer":[
+         "Point-to-Point",
+         "Star",
+         "Mesh"
+      ]
+   },
+   {
+      "question":"If the bandwidth of the spread spectrum signal is 180MHz and the signal bandwidth is 15MHz. How many carrier frequencies are required for generating the spread spectrum signal?",
+      "options":[
+         "12",
+         "33",
+         "555",
+         "69"
+      ],
+      "source_page":29,
+      "chapter":"7. Bluetooth",
+      "answer":"12"
+   },
+   {
+      "question":"If the number of carrier frequencies is equal to 25, how many output bits must be generated by the PRN generator? (Assume FHSS)",
+      "type":"single",
+      "options":[
+         "800",
+         "33",
+         "5",
+         "96"
+      ],
+      "source_page":29,
+      "chapter":"7. Bluetooth",
+      "answer":"5"
+   },
+   {
+      "question":"Which frequency band does BLE operate in?",
+      "type":"single",
+      "options":[
+         "915 MHz",
+         "5.0 GHz",
+         "433 MHz",
+         "868 MHz",
+         "2.4 GHz"
+      ],
+      "source_page":29,
+      "chapter":"7. Bluetooth",
+      "answer":"2.4 GHz"
+   },
+   {
+      "question":"Which feature distinguishes BLE from Classic Bluetooth?",
+      "type":"single",
+      "options":[
+         "Longer range.",
+         "Better audio quality.",
+         "Higher data transfer rates.",
+         "Lower energy consumption."
+      ],
+      "source_page":30,
+      "chapter":"7. Bluetooth",
+      "answer":"Lower energy consumption."
+   },
+   {
+      "question":"Assume Bob can send 300 bits in one slot while using Bluetooth. How many slots does it take to send 1200 bits?",
+      "type":"single",
+      "options":[
+         "90000",
+         "33",
+         "5",
+         "1"
+      ],
+      "source_page":30,
+      "chapter":"7. Bluetooth",
+      "answer":"5"
+   },
+   {
+      "question":"Which of the following Topology does Bluetooth 4.0 support?",
+      "type":"multiple",
+      "options":[
+         "Ring",
+         "Scatter Net",
+         "Star",
+         "Mesh"
+      ],
+      "source_page":30,
+      "chapter":"7. Bluetooth",
+      "answer":[
+         "Scatter Net",
+         "Star"
+      ]
+   },
+   {
+      "question":"In BLE terminology, what is a 'GATT'?",
+      "type":"single",
+      "options":[
+         "Generic Access Transmission Technique",
+         "Generic Authentication Transfer Tool",
+         "Generic Attribute Profile",
+         "Generic Audio Transmission Technology"
+      ],
+      "source_page":30,
+      "chapter":"7. Bluetooth",
+      "answer":"Generic Attribute Profile"
+   },
+   {
+      "question":"If the hopping time, assuming FHSS, is equal to 500s, how many times would the signal hopped in one second? (you can select more than one option)",
+      "type":"multiple",
+      "options":[
+         "1500",
+         "2250",
+         "2000",
+         "1750",
+         "2500"
+      ],
+      "source_page":30,
+      "chapter":"7. Bluetooth",
+      "answer":[
+         "1500",
+         "2000",
+         "1750"
+      ]
+   },
+   {
+      "question":"In BLE, what is the role of a 'Central' device?",
+      "type":"single",
+      "options":[
+         "It acts as an intermediary between two devices.",
+         "It broadcasts data to peripheral devices.",
+         "It only receives data.",
+         "It connects to and controls peripheral devices."
+      ],
+      "source_page":31,
+      "chapter":"7. Bluetooth",
+      "answer":"It connects to and controls peripheral devices."
+   },
+   {
+      "question":"Which of the following is a benefit of cloud computing?",
+      "type":"single",
+      "options":[
+         "Limited data accessibility",
+         "Lower maintenance costs",
+         "Limited scalability",
+         "Higher upfront costs"
+      ],
+      "source_page":32,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Lower maintenance costs"
+   },
+   {
+      "question":"Which of the following is not a benefit of AIoT? (pick the best answer)",
+      "type":"single",
+      "options":[
+         "Enhanced security",
+         "Increased productivity",
+         "Improved energy efficiency",
+         "Decreased complexity"
+      ],
+      "source_page":32,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Decreased complexity"
+   },
+   {
+      "question":"AIoT stands for?",
+      "type":"single",
+      "options":[
+         "Artificial Internet of Things",
+         "Artificial Intelligence of Things",
+         "Advanced IoT",
+         "Artificial Intelligence on IoT"
+      ],
+      "source_page":32,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Artificial Intelligence on IoT"
+   },
+   {
+      "question":"Match the following services to the components that are NOT managed by the Cloud operator (e.g. Microsoft)?",
+      "type":"matching",
+      "options":[
+         "1. Networking, Storage, Servers, Virtualization, OS, Middleware, Runtime, Data and Applications.",
+         "2. OS, Middleware, Runtime, Data and Applications.",
+         "3. Data and Applications.",
+         "4. Nil"
+      ],
+      "source_page":32,
+      "chapter":"8. AIoT & Cloud",
+      "match_targets":{
+         "SaaS":"4. Nil",
+         "IaaS":"2. OS, Middleware, Runtime, Data and Applications.",
+         "On Premises":"1. Networking, Storage, Servers, Virtualization, OS, Middleware, Runtime, Data and Applications.",
+         "PaaS":"3. Data and Applications."
+      },
+      "answer":{
+         "SaaS":"4. Nil",
+         "IaaS":"2. OS, Middleware, Runtime, Data and Applications.",
+         "On Premises":"1. Networking, Storage, Servers, Virtualization, OS, Middleware, Runtime, Data and Applications.",
+         "PaaS":"3. Data and Applications."
+      }
+   },
+   {
+      "question":"IIoT stands for Industrial IoT.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":33,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"True"
+   },
+   {
+      "question":"Which of the following is not a potential use case for AIoT in industrial automation?",
+      "type":"single",
+      "options":[
+         "Quality control",
+         "Employee time tracking",
+         "Inventory management",
+         "Predictive maintenance"
+      ],
+      "source_page":33,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Employee time tracking"
+   },
+   {
+      "question":"What is IaaS?",
+      "type":"single",
+      "options":[
+         "Interaction as a Service",
+         "Infrastructure as a Service",
+         "Internet as a Service",
+         "Intelligence as a Service"
+      ],
+      "source_page":33,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Infrastructure as a Service"
+   },
+   {
+      "question":"Which of the following statement is FALSE?",
+      "type":"single",
+      "options":[
+         "Type 1 Hypervisor are also known as Bare metal hypervisor.",
+         "Type 1 Hypervisor do not use host OS.",
+         "Type 2 Hypervisor use host OS.",
+         "Type 2 Hypervisor are also known as Bare metal hypervisor."
+      ],
+      "source_page":33,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Type 2 Hypervisor are also known as Bare metal hypervisor."
+   },
+   {
+      "question":"Which of the following is a limitation of AIoT?",
+      "type":"single",
+      "options":[
+         "It can be expensive to implement",
+         "It requires a high degree of technical expertise to implement",
+         "It is limited by the processing power of IoT devices",
+         "It is only suitable for large-scale applications"
+      ],
+      "source_page":33,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"It is limited by the processing power of IoT devices"
+   },
+   {
+      "question":"Which of the following is a good example of an AIoT application?",
+      "type":"single",
+      "options":[
+         "A fitness tracker that monitors your heart rate and sleep patterns",
+         "A smart home thermostat that learns your preferences over time",
+         "A wearable device that tracks your steps and calories burned",
+         "A wireless security camera that sends alerts to your smartphone"
+      ],
+      "source_page":34,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"A smart home thermostat that learns your preferences over time"
+   },
+   {
+      "question":"Based on the lecture, which of the following is not a typical deployment challenge for Edge computing devices.",
+      "type":"single",
+      "options":[
+         "Thermal",
+         "Power",
+         "Sound proofing",
+         "Waterproofing"
+      ],
+      "source_page":34,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Sound proofing"
+   },
+   {
+      "question":"Match the Edge computing platforms to how they perform inferencing on the device.",
+      "type":"matching",
+      "options":[
+         "1. Raspberry Pi",
+         "2. NVidia Jetson"
+      ],
+      "source_page":34,
+      "chapter":"8. AIoT & Cloud",
+      "match_targets":{
+         "GPU-centric":"2. NVidia Jetson",
+         "CPU-centric":"1. Raspberry Pi"
+      },
+      "answer":{
+         "GPU-centric":"2. NVidia Jetson",
+         "CPU-centric":"1. Raspberry Pi"
+      }
+   },
+   {
+      "question":"Which of the following is TRUE about Fog Computing?",
+      "type":"multiple",
+      "options":[
+         "Fog computing are located nearer to the Cloud computing",
+         "Cloud is a centralized system, while the fog is a distributed decentralized infrastructure",
+         "Fog provides low latency",
+         "Fog computing is a separate architecture that can replace cloud computing."
+      ],
+      "source_page":34,
+      "chapter":"8. AIoT & Cloud",
+      "answer":[
+         "Cloud is a centralized system, while the fog is a distributed decentralized infrastructure",
+         "Fog provides low latency"
+      ]
+   },
+   {
+      "question":"Which of the following is NOT a Cloud Service Model?",
+      "type":"single",
+      "options":[
+         "Infrastructure as a Service",
+         "Virtualization as a Service",
+         "Software as a Service",
+         "Platform as a Service"
+      ],
+      "source_page":34,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Virtualization as a Service"
+   },
+   {
+      "question":"Based on the lecture, which of the following is NOT an advantage of Cloud Computing?",
+      "type":"single",
+      "options":[
+         "Resilient",
+         "Virtualization",
+         "Management",
+         "Integration"
+      ],
+      "source_page":35,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Integration"
+   },
+   {
+      "question":"What is the name of the cloud service model that provides access to software applications over the internet?",
+      "type":"single",
+      "options":[
+         "Function as a Service (FaaS)",
+         "Software as a Service (SaaS)",
+         "Platform as a Service (PaaS)",
+         "Infrastructure as a Service (IaaS)"
+      ],
+      "source_page":35,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Software as a Service (SaaS)"
+   },
+   {
+      "question":"Which of the following is NOT an advantage of Edge Computing?",
+      "type":"single",
+      "options":[
+         "Faster response time",
+         "Low investment cost",
+         "Significantly reduced data storage requirements",
+         "Reduces Network Bandwidth Requirements"
+      ],
+      "source_page":35,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"Low investment cost"
+   },
+   {
+      "question":"What is Cloud Computing?",
+      "type":"single",
+      "options":[
+         "It is a way to access software and services over the internet.",
+         "It is a way to store data on your local computer.",
+         "It is a way to physically connect multiple computers together.",
+         "It is a way to protect data from unauthorized access."
+      ],
+      "source_page":35,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"It is a way to access software and services over the internet."
+   },
+   {
+      "question":"What is the purpose of AIoT?",
+      "type":"single",
+      "options":[
+         "To replace IoT devices with AI-powered devices",
+         "To improve the design of IoT devices",
+         "To create a secure network for IoT devices",
+         "To integrate artificial intelligence with the internet of things"
+      ],
+      "source_page":35,
+      "chapter":"8. AIoT & Cloud",
+      "answer":"To integrate artificial intelligence with the internet of things"
+   },
+   {
+      "question":"Assume that you are a network operator, and you are allocated a frequency spectrum of bandwidth equal to 1000kHz for carrying out 4G cellular operation. How many subcarriers (maximum) can you support given the above bandwidth. Assume that the bandwidth of the guard band on each side of the spectrum must be equal to 50kHz.",
+      "type":"single",
+      "options":[
+         "70",
+         "60",
+         "40",
+         "50"
+      ],
+      "source_page":36,
+      "chapter":"9. Cellular IoT",
+      "answer":"60"
+   },
+   {
+      "question":"Which of the following is NOT a mode of operations for NB-IoT?",
+      "type":"single",
+      "options":[
+         "Guard band",
+         "Stand Alone",
+         "In-Band",
+         "Out-Band"
+      ],
+      "source_page":36,
+      "chapter":"9. Cellular IoT",
+      "answer":"Out-Band"
+   },
+   {
+      "question":"A network manager chose to use QPSK (Quadrature Phase Shift Keying) as the modulation scheme for the NB-IoT network. Given this scenario, select how many bits can an NB-IoT transmit at any given point of time. (Select only the possible option)",
+      "type":"single",
+      "options":[
+         "None of the above",
+         "Two bits",
+         "All of the above",
+         "Three bits",
+         "Only one bit"
+      ],
+      "source_page":36,
+      "chapter":"9. Cellular IoT",
+      "answer":"None of the above"
+   },
+   {
+      "question":"Which of the following IoT applications is best suited for NB-IoT? Choose the best one.",
+      "type":"single",
+      "options":[
+         "Real-time video streaming",
+         "Wearable fitness trackers",
+         "Smart metering in rural areas",
+         "High-speed asset tracking"
+      ],
+      "source_page":37,
+      "chapter":"9. Cellular IoT",
+      "answer":"Smart metering in rural areas"
+   },
+   {
+      "question":"Consider the following two statements and select the appropriate option below: Statement A: NB-IoT requires the device to connect to an operator network via licensed or unlicensed spectrum. The spectrum in which the devices are transmitting information does not matter if the eNodeB is aware of the same. Statement B: Unlike normal LTE devices, NB-IoT devices need not listen to paging regularly. In fact, it is okay even if these devices do not listen to paging for a whole day as well.",
+      "type":"single",
+      "options":[
+         "Both Statements are false.",
+         "Statement B is true, but Statement A is false.",
+         "Statements A and B are true.",
+         "Statement A is true, but Statement B is false."
+      ],
+      "source_page":37,
+      "chapter":"9. Cellular IoT",
+      "answer":"Both Statements are false."
+   },
+   {
+      "question":"Why is NIDD particularly suitable for NB-IoT?",
+      "type":"single",
+      "options":[
+         "It allows direct device-to-device communication",
+         "It uses a broadcast communication model",
+         "It supports high-bandwidth applications",
+         "It eliminates IP overhead, optimizing for small data packets"
+      ],
+      "source_page":37,
+      "chapter":"9. Cellular IoT",
+      "answer":"It eliminates IP overhead, optimizing for small data packets"
+   },
+   {
+      "question":"Which factors determine the bit rate of a communication system?",
+      "type":"single",
+      "options":[
+         "The noise level and the power of the transmitted signal",
+         "The type of modulation and the size of the communication channel",
+         "The modulation scheme and the symbol rate",
+         "The carrier frequency and the signal bandwidth"
+      ],
+      "source_page":37,
+      "chapter":"9. Cellular IoT",
+      "answer":"The modulation scheme and the symbol rate"
+   },
+   {
+      "question":"Consider the following two statements and select the appropriate option below: Statement A: Any mobile connected to a 4G network can move while retaining an active connection. Statement B: As NB-IoT devices rely on coverage provided by 4G, they can also move while maintaining an active connection.",
+      "type":"single",
+      "options":[
+         "Statement A is true, but Statement B is false.",
+         "Statements A and B are true. Statement B is the perfect explanation for Statement A.",
+         "Statements A and B are true. Statement B and Statement A are independent of each other.",
+         "Both Statements are false.",
+         "Statement B is true, but Statement A is false."
+      ],
+      "source_page":38,
+      "chapter":"9. Cellular IoT",
+      "answer":"Statement A is true, but Statement B is false."
+   },
+   {
+      "question":"Which network element is responsible for interfacing NIDD with IoT application servers in NB-IoT?",
+      "type":"single",
+      "options":[
+         "MME",
+         "EPC",
+         "S-GW",
+         "SCEF"
+      ],
+      "source_page":38,
+      "chapter":"9. Cellular IoT",
+      "answer":"SCEF"
+   },
+   {
+      "question":"Why is HTTP not always suitable for IoT devices?",
+      "type":"single",
+      "options":[
+         "It has high overhead and power consumption",
+         "It lacks support for small data transfers",
+         "It is incompatible with IoT hardware",
+         "It is not an IP-based protocol"
+      ],
+      "source_page":38,
+      "chapter":"9. Cellular IoT",
+      "answer":"It has high overhead and power consumption"
+   },
+   {
+      "question":"Which of the following features of NB-IoT reduces power consumption by allowing devices to 'sleep' for extended periods?",
+      "type":"single",
+      "options":[
+         "VOLTE",
+         "eDRX",
+         "NIDD",
+         "PSM"
+      ],
+      "source_page":38,
+      "chapter":"9. Cellular IoT",
+      "answer":"PSM"
+   },
+   {
+      "question":"Consider the following two statements and select the appropriate option below: Statement A: NB-IoT devices are not suitable for indoor placement due to insufficient coverage, making it challenging to support devices located inside buildings. Statement B: NB-IoT devices rely on coverage provided by LTE and 5G-NR cellular technologies.",
+      "type":"single",
+      "options":[
+         "Statement A is true, but Statement B is false.",
+         "Statements A and B are true. Statement B is the perfect explanation for Statement A.",
+         "Statement B is true, but Statement A is false.",
+         "Both Statements are false.",
+         "Statements A and B are true. Statement B and Statement A are independent of each other."
+      ],
+      "source_page":39,
+      "chapter":"9. Cellular IoT",
+      "answer":"Statement B is true, but Statement A is false."
+   },
+   {
+      "question":"Which of the following is a key advantage of NB-IoT over traditional cellular networks?",
+      "type":"single",
+      "options":[
+         "High Data Rates",
+         "Wide Coverage Area",
+         "High Reliability",
+         "Low Power Consumption"
+      ],
+      "source_page":39,
+      "chapter":"9. Cellular IoT",
+      "answer":"Low Power Consumption"
+   },
+   {
+      "question":"Assume NB-IoT scenario and calculate the minimum transmit power for a link budget equal to 170dB and receiver sensitivity equal to -150dBm. Enter the numerical number only in dBm.",
+      "type":"single",
+      "options":[
+         "20",
+         "200",
+         "50",
+         "1000"
+      ],
+      "source_page":39,
+      "chapter":"9. Cellular IoT",
+      "answer":"20"
+   },
+   {
+      "question":"Assume that the subcarrier band size has been increased from 15kHz to 25kHz. Using this information, calculate how much would be the bandwidth of one physical resource block. Select which of the following is the answer:",
+      "type":"single",
+      "options":[
+         "300kHz",
+         "500kHz",
+         "250kHz",
+         "375kHz"
+      ],
+      "source_page":39,
+      "chapter":"9. Cellular IoT",
+      "answer":"300kHz"
+   },
+   {
+      "question":"Which of the following organizations is responsible for the development of NB-IoT standards?",
+      "type":"single",
+      "options":[
+         "3GPP",
+         "IETF",
+         "Wi-Fi Alliance",
+         "IEEE"
+      ],
+      "source_page":40,
+      "chapter":"9. Cellular IoT",
+      "answer":"3GPP"
+   },
+   {
+      "question":"Assume that you are a network operator, and you chose to implement TDMA as the multiple access scheme. How much bandwidth is required to support 10 users if each user requires a bandwidth equal to 400kHz. Assume that the bandwidth of the guard band on each side of the spectrum must be equal to 50kHz.",
+      "type":"single",
+      "options":[
+         "4100kHz",
+         "400kHz",
+         "4000kHz",
+         "500kHz"
+      ],
+      "source_page":40,
+      "chapter":"9. Cellular IoT",
+      "answer":"500kHz"
+   },
+   {
+      "question":"Which of the following codes, used in CDMA, are considered orthogonal codes?",
+      "type":"single",
+      "options":[
+         "All of the above",
+         "<0,0,1,1> and <1,0,1,0>",
+         "<0,1,0,1> and <1,0,1,0>",
+         "<0,1,0,1> and <1,0,0,1>"
+      ],
+      "source_page":40,
+      "chapter":"9. Cellular IoT",
+      "answer":"<0,1,0,1> and <1,0,1,0>"
+   },
+   {
+      "question":"NB-IoT is introduced in which of the following standards?",
+      "type":"single",
+      "options":[
+         "LTE-Advanced Pro",
+         "LTE-NB Advanced",
+         "LTE-Advanced",
+         "LTE"
+      ],
+      "source_page":40,
+      "chapter":"9. Cellular IoT",
+      "answer":"LTE-Advanced Pro"
+   },
+   {
+      "question":"Which of the following is not a feature of NB-IoT?",
+      "type":"single",
+      "options":[
+         "Extended Coverage",
+         "Extended Idle Mode",
+         "High Receiver Sensitivity",
+         "Long Battery Life"
+      ],
+      "source_page":41,
+      "chapter":"9. Cellular IoT",
+      "answer":"High Receiver Sensitivity"
+   },
+   {
+      "question":"Assume that you are a network operator, and you are allocated a frequency spectrum of bandwidth equal to 1000kHz for carrying out cellular operation. You chose to implement FDMA as the multiple access scheme. How many users can you support if each user requires a bandwidth equal to 40kHz. Assume that the bandwidth of the guard band on each side of the spectrum must be equal to 50kHz.",
+      "type":"single",
+      "options":[
+         "22",
+         "23",
+         "24",
+         "25"
+      ],
+      "source_page":41,
+      "chapter":"9. Cellular IoT",
+      "answer":"22"
+   },
+   {
+      "question":"Which of the following phases are required for a device to re-attach to a Thread Network? (You can select more than one)",
+      "type":"multiple",
+      "options":[
+         "Discovery",
+         "Attaching",
+         "Configuring",
+         "Commissioning"
+      ],
+      "source_page":42,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Attaching"
+      ]
+   },
+   {
+      "question":"Which of the following Full Thread Devices have routing capabilities? (You can select more than one)",
+      "type":"multiple",
+      "options":[
+         "Router",
+         "Leader",
+         "Intermediate Routing Device",
+         "Full End Device",
+         "Router Eligible End Device",
+         "PAN coordinator"
+      ],
+      "source_page":42,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Router",
+         "Leader",
+         "Router Eligible End Device"
+      ]
+   },
+   {
+      "question":"If the EUI64 address of a device is 62::1, what would be its link local IPv6 address. Assume 6LowPAN protocol.",
+      "type":"single",
+      "options":[
+         "FE80:0:0:0:60::1",
+         "FE80:0:0:0:62::1",
+         "None of answer mentioned",
+         "FE80:0:0:0:66::1",
+         "FE80:0:0:0:22::1"
+      ],
+      "source_page":42,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"FE80:0:0:0:22::1"
+   },
+   {
+      "question":"6LowPAN technology sits on top of ...",
+      "type":"single",
+      "options":[
+         "IEEE 802.15.16",
+         "Anything within IEEE 802",
+         "IEEE 802.15.11",
+         "IEEE 802.15.4"
+      ],
+      "source_page":42,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"IEEE 802.15.4"
+   },
+   {
+      "question":"Assume Bob is using DSSS to transmit his data to Alice. Bob decided to use the chipping sequence 10110100110 to transmit his bits. Bob transmitted 330 bits to Alice. Using this information, calculate how many actual bits represent Bob\u2019s data?",
+      "type":"single",
+      "options":[
+         "30",
+         "40",
+         "50",
+         "100"
+      ],
+      "source_page":43,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"30"
+   },
+   {
+      "question":"Which type of modulation is used in IEEE 802.15.4?",
+      "type":"single",
+      "options":[
+         "Direct Sequence Spread Spectrum (DSSS)",
+         "Phase-Shift Keying (PSK)",
+         "Orthogonal Frequency-Division Multiplexing (OFDM)",
+         "Frequency Shift Keying (FSK)"
+      ],
+      "source_page":43,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"Direct Sequence Spread Spectrum (DSSS)"
+   },
+   {
+      "question":"Assume that a user wants to transmit bit 0 using Direct Sequence Spread Spectrum. The user using 'XOR' to generate the same. What is the transmitted signal (in binary) if the chipping sequence is 011011000101?",
+      "type":"single",
+      "options":[
+         "011011001111",
+         "011011000000",
+         "011011000111",
+         "011011000101"
+      ],
+      "source_page":43,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"011011000101"
+   },
+   {
+      "question":"IEEE 802.15.4 is a basis for which popular IoT communication protocol?",
+      "type":"multiple",
+      "options":[
+         "LTE",
+         "Bluetooth",
+         "WiFi",
+         "Thread",
+         "ZigBee"
+      ],
+      "source_page":43,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Thread",
+         "ZigBee"
+      ]
+   },
+   {
+      "question":"Which of the following is true about Thread Network?",
+      "type":"single",
+      "options":[
+         "IPv6 ULA address is used for mesh establishment and link maintenance.",
+         "Every Thread device is assigned only one Mesh local address.",
+         "Thread enables full mesh connectivity between all the devices in the network.",
+         "A thread network can employ more 10 routers in the network.",
+         "None of the Above"
+      ],
+      "source_page":43,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"None of the Above"
+   },
+   {
+      "question":"Assume that a user wants to transmit bit 1 using Direct Sequence Spread Spectrum. The user using 'XOR' to generate the same. What is the transmitted signal (in binary) if the chipping sequence is 101011010011?",
+      "type":"single",
+      "options":[
+         "011011001111",
+         "011011000000",
+         "011011000111",
+         "010100101100"
+      ],
+      "source_page":44,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"010100101100"
+   },
+   {
+      "question":"What does IEEE 802.15.4 primarily focus on?",
+      "type":"single",
+      "options":[
+         "Long-range wireless communication",
+         "High-bandwidth local area networking",
+         "Low-rate wireless personal area networks",
+         "High-speed internet connectivity"
+      ],
+      "source_page":44,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"Low-rate wireless personal area networks"
+   },
+   {
+      "question":"6LowPAN is the same as IEEE802.15.4",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":44,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"False"
+   },
+   {
+      "question":"The size of MTU for an 802.15.4 network is equal to 127 bytes. Of which, 802.15.4 header occupies 25 bytes, security option occupies 21 bytes, IPv6 and UDP compressed headers occupy 10 bytes. Given this situation, choose which of the following application layer payloads (only the size of the payload is shown) can be transmitted over the network. Assume Thread protocol is used for the higher layers.",
+      "type":"single",
+      "options":[
+         "71",
+         "80",
+         "120",
+         "127",
+         "All of the above"
+      ],
+      "source_page":44,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"All of the above"
+   },
+   {
+      "question":"If the 16-bit address assigned to a device in a 6LowPAN network is 4EA1, what is the IPv6 link local address? Assume the PAN ID is 5678.",
+      "type":"single",
+      "options":[
+         "FE80:5678::4EA1",
+         "FE80::4EA1",
+         "FE80::5678:4EA1",
+         "FE80:5678:4EA1::0"
+      ],
+      "source_page":44,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"FE80::5678:4EA1"
+   },
+   {
+      "question":"Which of the following are not true about 6LowPAN?",
+      "type":"single",
+      "options":[
+         "None of the statements are false.",
+         "6LOWPAN is a networking layer protocol for Internet of Things",
+         "6LOWPAN has the capability of optional mesh routing in the data link layer",
+         "6LOWPAN is based on IPv4 and IPv6 protocols for transmitting packets"
+      ],
+      "source_page":45,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"6LOWPAN is based on IPv4 and IPv6 protocols for transmitting packets"
+   },
+   {
+      "question":"Consider an IEEE 802.15.4 network using Beacon-enabled CSMA/CA. Given this, choose which of the following statements are false:",
+      "type":"multiple",
+      "options":[
+         "Contention Free Period is reserved for real-time services.",
+         "Contention Access Period is reserved for real-time services.",
+         "Devices can sleep during the inactive interval of the beacon interval.",
+         "Contention Free Period uses slotted CSMA.",
+         "Contention Access Period uses slotted CSMA.",
+         "A part of the beacon interval is busy as coordinator requires it to send out MAC command packets."
+      ],
+      "source_page":45,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Contention Access Period is reserved for real-time services.",
+         "Contention Free Period uses slotted CSMA.",
+         "A part of the beacon interval is busy as coordinator requires it to send out MAC command packets."
+      ]
+   },
+   {
+      "question":"Which of the following frames are required to be transmitted using CSMA/CA?",
+      "type":"single",
+      "options":[
+         "All the mentioned frames",
+         "Beacons",
+         "Data Frames",
+         "Acknowledgements"
+      ],
+      "source_page":45,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"Data Frames"
+   },
+   {
+      "question":"Assume Bob is using DSSS to transmit his data to Alice. Bob decided to use the chipping sequence 101101 to transmit his bits. If the length of the packet is 100 bits, how many bit will Bob actually transmit?",
+      "type":"single",
+      "options":[
+         "600",
+         "700",
+         "86",
+         "900"
+      ],
+      "source_page":45,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"600"
+   },
+   {
+      "question":"If the 16-bit address assigned to a device in a 6LowPAN network is 4EA1, what is the IPv6 link local address?",
+      "type":"single",
+      "options":[
+         "FE80:4EA1::0",
+         "PAN ID is unknown.",
+         "FE80::4EA1",
+         "FE80::1111:4EA1"
+      ],
+      "source_page":46,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"FE80::4EA1"
+   },
+   {
+      "question":"What kind of network topology is supported by IEEE 802.15.4?",
+      "type":"multiple",
+      "options":[
+         "Star",
+         "Bus",
+         "Mesh",
+         "Point-to-Point"
+      ],
+      "source_page":46,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Star",
+         "Mesh",
+         "Point-to-Point"
+      ]
+   },
+   {
+      "question":"IEEE 802.15.4 defines the operation of which network layers?",
+      "type":"multiple",
+      "options":[
+         "Session Layer",
+         "Transport Layer",
+         "Application Layer",
+         "Physical (PHY)",
+         "Data Link Layer",
+         "Network Layer"
+      ],
+      "source_page":46,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Physical (PHY)",
+         "Data Link Layer"
+      ]
+   },
+   {
+      "question":"Which of the following is NOT true about Border Routers in a Thread Network?",
+      "type":"single",
+      "options":[
+         "Border Router provide services to devices within the Thread Network only.",
+         "A REED can be configured as a Border Router in the Thread Network.",
+         "Border Router can provide connectivity from Thread Network to 802.11 networks.",
+         "There cannot be more than 3 border routers in a Thread Network."
+      ],
+      "source_page":46,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"There cannot be more than 3 border routers in a Thread Network."
+   },
+   {
+      "question":"Which of the following is not a characteristic of Thread?",
+      "type":"single",
+      "options":[
+         "The range of the network is more than enough to cover a home.",
+         "Devices can easily join the network.",
+         "There is no single point of failure.",
+         "All the options are characteristics of Thread.",
+         "Thread can support large networks."
+      ],
+      "source_page":47,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"Devices can easily join the network."
+   },
+   {
+      "question":"Which of the following are used by IEEE 802.15.4?",
+      "type":"multiple",
+      "options":[
+         "Frequency Hopping Spread Spectrum",
+         "Direct Sequence Spread Spectrum",
+         "CSMA with Collision Avoidance",
+         "CSMA with Collision Detection"
+      ],
+      "source_page":47,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":[
+         "Direct Sequence Spread Spectrum",
+         "CSMA with Collision Avoidance"
+      ]
+   },
+   {
+      "question":"6LowPAN uses traditional IPv6 as its networking layer.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":47,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"False"
+   },
+   {
+      "question":"The full form of 6LOWPAN is ...",
+      "type":"single",
+      "options":[
+         "6 Low Power Wireless Personal Area Network",
+         "IPv6 over Low-Power Wide Area Networks",
+         "IPv6 over Low-Power Wireless Personal Area Networks",
+         "6 Low Power Wide Personal Area Network"
+      ],
+      "source_page":47,
+      "chapter":"10. 802.15.4 & Thread",
+      "answer":"IPv6 over Low-Power Wireless Personal Area Networks"
+   },
+   {
+      "question":"Z-Wave is an implementation of a ZigBee protocol.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":48,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"False"
+   },
+   {
+      "question":"Which of the following is needed to be a 'ZigBee Compliant Product'",
+      "type":"multiple",
+      "options":[
+         "IEEE 802.15.4",
+         "IEEE 802.11",
+         "Application Profile",
+         "ZigBee Stack"
+      ],
+      "source_page":48,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":[
+         "IEEE 802.15.4",
+         "Application Profile",
+         "ZigBee Stack"
+      ]
+   },
+   {
+      "question":"What is the role of Zigbee coordinator in the Zigbee network?",
+      "type":"single",
+      "options":[
+         "Controls the network",
+         "Communicates with other nodes",
+         "Both",
+         "None"
+      ],
+      "source_page":48,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"Both"
+   },
+   {
+      "question":"Zigbee have a transport layer.",
+      "type":"single",
+      "options":[
+         "True",
+         "False"
+      ],
+      "source_page":48,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"False"
+   },
+   {
+      "question":"What is the role of Zigbee routers in the Zigbee network?",
+      "type":"single",
+      "options":[
+         "Acts as a relay between other nodes",
+         "Controls the network",
+         "Both",
+         "None"
+      ],
+      "source_page":48,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"Acts as a relay between other nodes"
+   },
+   {
+      "question":"Which frequency does Z-Wave operate on?",
+      "type":"single",
+      "options":[
+         "915 Mhz",
+         "2.4 Ghz",
+         "5 Ghz",
+         "868 Mhz"
+      ],
+      "source_page":49,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"868 Mhz"
+   },
+   {
+      "question":"What is the purpose of Zigbee communication?",
+      "type":"single",
+      "options":[
+         "Healthcare",
+         "Industrial Control",
+         "Home Automation",
+         "All of the above"
+      ],
+      "source_page":49,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"All of the above"
+   },
+   {
+      "question":"Which of the following do not contribute in routing in a ZigBee network?",
+      "type":"single",
+      "options":[
+         "ZigBee End Device",
+         "ZigBee Coordinator",
+         "ZigBee Router",
+         "ZigBee Master"
+      ],
+      "source_page":49,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"ZigBee End Device"
+   },
+   {
+      "question":"What is the role of Zigbee end devices in the Zigbee network?",
+      "type":"single",
+      "options":[
+         "Communicates with other nodes",
+         "Controls the network",
+         "Both",
+         "None"
+      ],
+      "source_page":49,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"Communicates with other nodes"
+   },
+   {
+      "question":"Which network topology is not supported by ZigBee?",
+      "type":"single",
+      "options":[
+         "Bus",
+         "Star",
+         "Mesh",
+         "Cluster Tree"
+      ],
+      "source_page":49,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"Bus"
+   },
+   {
+      "question":"Which of the following is not a feature of Zigbee? (choose the best one)",
+      "type":"single",
+      "options":[
+         "Real-time Communication",
+         "Large Bandwidth",
+         "High Security",
+         "Low Power Consumption"
+      ],
+      "source_page":50,
+      "chapter":"11. ZigBee and ZWave",
+      "answer":"Large Bandwidth"
+   }
+]

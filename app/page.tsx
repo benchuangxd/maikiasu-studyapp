@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -9,12 +9,47 @@ import { Badge } from '@/components/ui/badge';
 import { SessionResumeBanner } from '@/components/study/session-resume-banner';
 import { LocalStorageAdapter, STORAGE_KEYS } from '@/lib/storage/local-storage';
 import { getDueQuestions, getReviewStats } from '@/lib/services/review-service';
+import { parseQuestionsFromJSON } from '@/lib/parsers/json-parser';
+import { MODULES, type ModuleDefinition } from '@/lib/config/modules';
 import type { Question, StudySession, ActiveSession } from '@/types/question';
 import { formatDurationHuman, formatDate } from '@/lib/utils/format';
 import { cn } from '@/lib/utils';
+import { RefreshCw, CheckCircle2, AlertCircle, Loader2, BookOpen } from 'lucide-react';
 
+// Storage adapters
 const questionsStorage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTIONS);
 const sessionsStorage = new LocalStorageAdapter<StudySession[]>(STORAGE_KEYS.SESSIONS);
+const loadedModulesStorage = new LocalStorageAdapter<Record<string, string>>(STORAGE_KEYS.LOADED_MODULES);
+// loaded-modules value: Record<moduleId, loadedAt ISO string>
+
+type ModuleStatus = 'idle' | 'loading' | 'loaded' | 'error';
+
+interface ModuleState {
+  status: ModuleStatus;
+  questionCount: number;
+  categories: number;
+  error?: string;
+  loadedAt?: string;
+}
+
+async function fetchRawModule(mod: ModuleDefinition): Promise<unknown> {
+  const res = await fetch(mod.file);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  let text = await res.text();
+  text = text.replace(/,\s*([}\]])/g, '$1');
+  return JSON.parse(text);
+}
+
+async function fetchAndParseModule(
+  mod: ModuleDefinition,
+  existingQuestions: Question[],
+  forceAll = false,
+): Promise<{ imported: Question[]; errors: string[] }> {
+  const raw = await fetchRawModule(mod);
+  // forceAll=true: skip deduplication so we always get the full set back
+  const result = parseQuestionsFromJSON(raw, forceAll ? [] : existingQuestions, mod.id);
+  return { imported: result.questions, errors: result.errors };
+}
 
 export default function Home() {
   const router = useRouter();
@@ -25,34 +60,171 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   const [activeStudySession, setActiveStudySession] = useState<ActiveSession | null>(null);
 
+  // Per-module state
+  const [moduleStates, setModuleStates] = useState<Record<string, ModuleState>>(() =>
+    Object.fromEntries(MODULES.map((m) => [m.id, { status: 'idle', questionCount: 0, categories: 0 }]))
+  );
+
+  const updateModuleState = useCallback((id: string, patch: Partial<ModuleState>) => {
+    setModuleStates((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
+  }, []);
+
+  // Load a module (fetch + parse + merge into storage)
+  const loadModule = useCallback(async (mod: ModuleDefinition, reload = false) => {
+    updateModuleState(mod.id, { status: 'loading', error: undefined });
+
+    try {
+      // Get current questions
+      const current = questionsStorage.get() ?? [];
+
+      if (reload) {
+        // On reload: fetch the full parsed set (no dedup), then remove any existing
+        // copies of those questions from storage (tagged OR untagged legacy copies),
+        // and replace them with freshly tagged questions.
+        const { imported, errors } = await fetchAndParseModule(mod, [], true);
+        const freshTexts = new Set(imported.map((q) => q.text));
+        // Strip old copies: tagged with this module OR text-matched legacy untagged questions
+        const base = current.filter(
+          (q) => q.module !== mod.id && !freshTexts.has(q.text)
+        );
+        const next = [...base, ...imported];
+        questionsStorage.set(next);
+        const loadedAt = new Date().toISOString();
+        const loadedMods = loadedModulesStorage.get() ?? {};
+        loadedModulesStorage.set({ ...loadedMods, [mod.id]: loadedAt });
+        const modQuestions = next.filter((q) => q.module === mod.id);
+        const cats = new Set(modQuestions.map((q) => q.category)).size;
+        updateModuleState(mod.id, {
+          status: 'loaded',
+          questionCount: modQuestions.length,
+          categories: cats,
+          loadedAt,
+          error: errors.length > 0 ? `${errors.length} question(s) skipped` : undefined,
+        });
+        setQuestions(next);
+        setDueCount(getDueQuestions(next).length);
+        return;
+      }
+
+      const { imported, errors } = await fetchAndParseModule(mod, current);
+
+      const next = [...current, ...imported];
+      questionsStorage.set(next);
+
+      // Track loaded state
+      const loadedAt = new Date().toISOString();
+      const loadedMods = loadedModulesStorage.get() ?? {};
+      loadedModulesStorage.set({ ...loadedMods, [mod.id]: loadedAt });
+
+      // Count categories for this module's new questions
+      const modQuestions = next.filter((q) => q.module === mod.id);
+      const cats = new Set(modQuestions.map((q) => q.category)).size;
+
+      updateModuleState(mod.id, {
+        status: 'loaded',
+        questionCount: modQuestions.length,
+        categories: cats,
+        loadedAt,
+        error: errors.length > 0 ? `${errors.length} question(s) skipped` : undefined,
+      });
+
+      // Refresh global question state
+      setQuestions(next);
+      const due = getDueQuestions(next);
+      setDueCount(due.length);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      updateModuleState(mod.id, { status: 'error', error: msg });
+    }
+  }, [updateModuleState]);
+
+  // Initial load
   useEffect(() => {
     const qs = questionsStorage.get() ?? [];
     const ss = sessionsStorage.get() ?? [];
+    const loadedMods = loadedModulesStorage.get() ?? {};
+
     setQuestions(qs);
     setSessions(ss);
 
     if (qs.length > 0) {
-      const due = getDueQuestions(qs);
-      setDueCount(due.length);
+      setDueCount(getDueQuestions(qs).length);
     }
 
     if (ss.length > 0) {
       const totalCorrect = ss.reduce((acc, s) => acc + s.correctAnswers, 0);
-      const totalQuestions = ss.reduce((acc, s) => acc + s.totalQuestions, 0);
-      setOverallAccuracy(totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0);
+      const totalQs = ss.reduce((acc, s) => acc + s.totalQuestions, 0);
+      setOverallAccuracy(totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : 0);
     }
 
-    // Check for active study session
+    // Active session
     const activeSession = new LocalStorageAdapter<ActiveSession>(STORAGE_KEYS.ACTIVE_SESSION).get();
     if (activeSession) {
       const questionIds = new Set(qs.map((q: Question) => q.id));
       const validIds = activeSession.questionIds.filter((id: string) => questionIds.has(id));
-      if (validIds.length > 0) {
-        setActiveStudySession(activeSession);
-      }
+      if (validIds.length > 0) setActiveStudySession(activeSession);
     }
 
+    // Reconcile module states from storage
+    const initStates: Record<string, ModuleState> = {};
+    for (const mod of MODULES) {
+      const modQs = qs.filter((q) => q.module === mod.id);
+      if (loadedMods[mod.id] && modQs.length > 0) {
+        initStates[mod.id] = {
+          status: 'loaded',
+          questionCount: modQs.length,
+          categories: new Set(modQs.map((q) => q.category)).size,
+          loadedAt: loadedMods[mod.id],
+        };
+      } else {
+        initStates[mod.id] = { status: 'idle', questionCount: 0, categories: 0 };
+      }
+    }
+    setModuleStates(initStates);
     setLoaded(true);
+
+    // Auto-import any modules that haven't been loaded yet
+    const notLoaded = MODULES.filter((m) => !loadedMods[m.id] || qs.filter((q) => q.module === m.id).length === 0);
+    if (notLoaded.length > 0) {
+      // Fire sequentially to avoid concurrent writes to localStorage
+      (async () => {
+        for (const mod of notLoaded) {
+          await new Promise<void>((resolve) => {
+            // We must access latest storage state each time
+            const doLoad = async () => {
+              const current = questionsStorage.get() ?? [];
+              const lm = loadedModulesStorage.get() ?? {};
+              updateModuleState(mod.id, { status: 'loading', error: undefined });
+              try {
+                const base = current.filter((q) => q.module !== mod.id);
+                const { imported, errors } = await fetchAndParseModule(mod, base);
+                const next = [...base, ...imported];
+                questionsStorage.set(next);
+                const loadedAt = new Date().toISOString();
+                loadedModulesStorage.set({ ...lm, [mod.id]: loadedAt });
+                const modQs = next.filter((q) => q.module === mod.id);
+                const cats = new Set(modQs.map((q) => q.category)).size;
+                updateModuleState(mod.id, {
+                  status: 'loaded',
+                  questionCount: modQs.length,
+                  categories: cats,
+                  loadedAt,
+                  error: errors.length > 0 ? `${errors.length} question(s) skipped` : undefined,
+                });
+                setQuestions(next);
+                setDueCount(getDueQuestions(next).length);
+              } catch (err) {
+                const msg = err instanceof Error ? err.message : String(err);
+                updateModuleState(mod.id, { status: 'error', error: msg });
+              }
+              resolve();
+            };
+            doLoad();
+          });
+        }
+      })();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!loaded) {
@@ -63,59 +235,15 @@ export default function Home() {
     );
   }
 
-  // Empty state — no questions imported
-  if (questions.length === 0) {
-    return (
-      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-16">
-        <div className="max-w-lg w-full flex flex-col items-center text-center gap-8">
-          {/* Brand mark */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30">
-              <span className="text-3xl font-bold text-primary">M</span>
-            </div>
-            <h1 className="text-5xl font-bold tracking-tight text-foreground">
-              Welcome to MaiKiasu
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Quiz-based learning with spaced repetition
-            </p>
-          </div>
-
-          {/* Onboarding card */}
-          <Card className="w-full border border-border/60 bg-card/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-lg text-left">Getting started</CardTitle>
-            </CardHeader>
-            <CardContent className="text-left space-y-3 text-sm text-muted-foreground">
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 w-6 h-6 rounded-full bg-primary/15 text-primary text-xs flex items-center justify-center font-semibold">1</span>
-                <p>Import your question bank from the Questions page — supports JSON files with multiple topics.</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 w-6 h-6 rounded-full bg-primary/15 text-primary text-xs flex items-center justify-center font-semibold">2</span>
-                <p>Start a study session. MaiKiasu uses the SM-2 spaced repetition algorithm to schedule reviews.</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 w-6 h-6 rounded-full bg-primary/15 text-primary text-xs flex items-center justify-center font-semibold">3</span>
-                <p>Return daily to review due cards and watch your accuracy climb over time.</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Button asChild size="lg" className="w-full max-w-xs">
-            <Link href="/questions">Import Questions</Link>
-          </Button>
-        </div>
-      </main>
-    );
-  }
-
-  // Dashboard — questions exist
-  const recentSessions = [...sessions].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  ).slice(0, 3);
+  const recentSessions = [...sessions]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
   const stats = getReviewStats(questions);
+  const ss = sessionsStorage.get() ?? [];
+  const totalCorrect = ss.reduce((acc, s) => acc + s.correctAnswers, 0);
+  const totalQs = ss.reduce((acc, s) => acc + s.totalQuestions, 0);
+  const accuracy = totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : null;
 
   return (
     <main className="container mx-auto px-4 py-10 max-w-3xl flex flex-col gap-10">
@@ -166,7 +294,7 @@ export default function Home() {
         <Card className="border border-border/60 bg-card/80">
           <CardContent className="pt-5 pb-4 flex flex-col gap-1">
             <span className="text-3xl font-bold text-foreground">
-              {overallAccuracy !== null ? `${overallAccuracy}%` : '—'}
+              {accuracy !== null ? `${accuracy}%` : overallAccuracy !== null ? `${overallAccuracy}%` : '—'}
             </span>
             <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Accuracy</span>
           </CardContent>
@@ -186,6 +314,87 @@ export default function Home() {
         )}
       </div>
 
+      {/* Modules */}
+      <section className="flex flex-col gap-4">
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Modules</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {MODULES.map((mod) => {
+            const state = moduleStates[mod.id];
+            return (
+              <Card
+                key={mod.id}
+                className={cn(
+                  'border transition-colors',
+                  state.status === 'loaded' && 'border-border/60 bg-card/80',
+                  state.status === 'loading' && 'border-primary/30 bg-primary/5',
+                  state.status === 'error' && 'border-destructive/40 bg-destructive/5',
+                  state.status === 'idle' && 'border-dashed border-border/50',
+                )}
+              >
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-sm font-semibold leading-snug">
+                      {mod.name}
+                    </CardTitle>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground -mt-0.5"
+                      disabled={state.status === 'loading'}
+                      onClick={() => loadModule(mod, state.status === 'loaded')}
+                      title={state.status === 'loaded' ? 'Reload module' : 'Load module'}
+                    >
+                      {state.status === 'loading' ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-3.5 w-3.5" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{mod.description}</p>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 pt-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {state.status === 'loaded' && (
+                      <>
+                        <div className="flex items-center gap-1 text-xs text-emerald-500">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <span>Loaded</span>
+                        </div>
+                        <Badge variant="secondary" className="text-xs h-5 px-1.5">
+                          <BookOpen className="h-2.5 w-2.5 mr-1" />
+                          {state.questionCount} questions
+                        </Badge>
+                        {state.categories > 0 && (
+                          <Badge variant="outline" className="text-xs h-5 px-1.5">
+                            {state.categories} {state.categories === 1 ? 'topic' : 'topics'}
+                          </Badge>
+                        )}
+                        {state.error && (
+                          <span className="text-xs text-yellow-500">{state.error}</span>
+                        )}
+                      </>
+                    )}
+                    {state.status === 'loading' && (
+                      <span className="text-xs text-muted-foreground">Importing…</span>
+                    )}
+                    {state.status === 'error' && (
+                      <div className="flex items-center gap-1 text-xs text-destructive">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        <span>{state.error ?? 'Failed to load'}</span>
+                      </div>
+                    )}
+                    {state.status === 'idle' && (
+                      <span className="text-xs text-muted-foreground">Not loaded</span>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Recent activity */}
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Recent Activity</h2>
@@ -194,7 +403,7 @@ export default function Home() {
           <Card className="border border-border/60 bg-card/80">
             <CardContent className="pt-5 pb-5">
               <p className="text-sm text-muted-foreground">
-                Import complete! Start your first study session.
+                No sessions yet. Start your first study session!
               </p>
             </CardContent>
           </Card>

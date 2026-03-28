@@ -82,6 +82,8 @@ export function StudySession({
 
   // Local state for the current (unanswered) question
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<Set<string>>(new Set());
+  const [matchingAnswers, setMatchingAnswers] = useState<Record<string, string>>({});
   const [sortedChoices, setSortedChoices] = useState<QuestionChoice[]>([]);
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [justCorrect, setJustCorrect] = useState(false);
@@ -110,15 +112,22 @@ export function StudySession({
   const choiceOrderRef = useRef<Map<string, QuestionChoice[]>>(new Map());
 
   const displayChoices = useMemo(() => {
-    if (!currentQuestion || currentQuestion.questionType !== QuestionType.MULTIPLE_CHOICE) {
+    if (!currentQuestion || (
+      currentQuestion.questionType !== QuestionType.MULTIPLE_CHOICE &&
+      currentQuestion.questionType !== QuestionType.MULTI_SELECT &&
+      currentQuestion.questionType !== QuestionType.MATCHING
+    )) {
       return [];
     }
     const cached = choiceOrderRef.current.get(currentQuestion.id);
     if (cached) {
+      // MATCHING doesn't use letter labels — keep original label (term text)
+      if (currentQuestion.questionType === QuestionType.MATCHING) return cached;
       return cached.map((c, i) => ({ ...c, label: LABELS[i] ?? String(i + 1) }));
     }
     const shuffled = shuffleArray(currentQuestion.choices);
     choiceOrderRef.current.set(currentQuestion.id, shuffled);
+    if (currentQuestion.questionType === QuestionType.MATCHING) return shuffled;
     return shuffled.map((c, i) => ({
       ...c,
       label: LABELS[i] ?? String(i + 1),
@@ -169,6 +178,18 @@ export function StudySession({
         const selected = displayChoices.find((c) => c.id === selectedAnswer);
         return selected?.isCorrect === true;
       }
+      case QuestionType.MULTI_SELECT: {
+        const correctIds = new Set(displayChoices.filter((c) => c.isCorrect).map((c) => c.id));
+        if (selectedAnswers.size !== correctIds.size) return false;
+        for (const id of selectedAnswers) {
+          if (!correctIds.has(id)) return false;
+        }
+        return true;
+      }
+      case QuestionType.MATCHING:
+        return currentQuestion.choices.every(
+          (c) => c.correctOrder !== undefined && matchingAnswers[c.id] === String(c.correctOrder)
+        );
       case QuestionType.SORTING:
         return sortedChoices.every((choice, index) => choice.correctOrder === index + 1);
       case QuestionType.FILL_IN_BLANK: {
@@ -178,7 +199,7 @@ export function StudySession({
       default:
         return false;
     }
-  }, [currentQuestion, selectedAnswer, sortedChoices, displayChoices]);
+  }, [currentQuestion, selectedAnswer, selectedAnswers, matchingAnswers, sortedChoices, displayChoices]);
 
   // Can submit
   const canSubmit = useCallback((): boolean => {
@@ -186,6 +207,10 @@ export function StudySession({
     switch (currentQuestion.questionType) {
       case QuestionType.MULTIPLE_CHOICE:
         return selectedAnswer !== null;
+      case QuestionType.MULTI_SELECT:
+        return selectedAnswers.size > 0;
+      case QuestionType.MATCHING:
+        return currentQuestion.choices.every((c) => !!matchingAnswers[c.id]);
       case QuestionType.SORTING:
         return true;
       case QuestionType.FILL_IN_BLANK:
@@ -193,7 +218,7 @@ export function StudySession({
       default:
         return false;
     }
-  }, [currentQuestion, isViewingPast, justSubmitted, selectedAnswer]);
+  }, [currentQuestion, isViewingPast, justSubmitted, selectedAnswer, selectedAnswers, matchingAnswers]);
 
   // Handle session completion — records StudySession and clears ActiveSession.
   // Guarded by ref to prevent double-recording.
@@ -249,6 +274,13 @@ export function StudySession({
       case QuestionType.MULTIPLE_CHOICE:
         answerValue = selectedAnswer ?? '';
         break;
+      case QuestionType.MULTI_SELECT:
+        answerValue = Array.from(selectedAnswers);
+        break;
+      case QuestionType.MATCHING:
+        // Store as array of "choiceId:selectedNum" pairs for view-only reconstruction
+        answerValue = Object.entries(matchingAnswers).map(([id, val]) => `${id}:${val}`);
+        break;
       case QuestionType.SORTING:
         answerValue = sortedChoices.map((c) => c.id);
         break;
@@ -279,7 +311,7 @@ export function StudySession({
 
     setActiveSession(updatedSession);
     saveSession(updatedSession);
-  }, [currentQuestion, currentQuestionId, evaluateAnswer, selectedAnswer, sortedChoices, activeSession, elapsedSeconds, saveSession]);
+  }, [currentQuestion, currentQuestionId, evaluateAnswer, selectedAnswer, selectedAnswers, matchingAnswers, sortedChoices, activeSession, elapsedSeconds, saveSession]);
 
   // Navigate
   const handleNext = useCallback(() => {
@@ -300,6 +332,8 @@ export function StudySession({
     saveSession(updatedSession);
 
     setSelectedAnswer(null);
+    setSelectedAnswers(new Set());
+    setMatchingAnswers({});
     setSortedChoices([]);
     setJustSubmitted(false);
     setJustCorrect(false);
@@ -313,6 +347,8 @@ export function StudySession({
     saveSession(updatedSession);
 
     setSelectedAnswer(null);
+    setSelectedAnswers(new Set());
+    setMatchingAnswers({});
     setSortedChoices([]);
     setJustSubmitted(false);
     setJustCorrect(false);
@@ -324,6 +360,8 @@ export function StudySession({
     saveSession(updatedSession);
 
     setSelectedAnswer(null);
+    setSelectedAnswers(new Set());
+    setMatchingAnswers({});
     setSortedChoices([]);
     setJustSubmitted(false);
     setJustCorrect(false);
@@ -373,14 +411,27 @@ export function StudySession({
         case '2':
         case '3':
         case '4':
-          if (
-            currentQuestion?.questionType === QuestionType.MULTIPLE_CHOICE &&
-            !isViewingPast &&
-            !justSubmitted
-          ) {
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+          if (!isViewingPast && !justSubmitted) {
             const idx = parseInt(e.key) - 1;
             if (idx < displayChoices.length) {
-              setSelectedAnswer(displayChoices[idx].id);
+              if (currentQuestion?.questionType === QuestionType.MULTIPLE_CHOICE) {
+                setSelectedAnswer(displayChoices[idx].id);
+              } else if (currentQuestion?.questionType === QuestionType.MULTI_SELECT) {
+                const choiceId = displayChoices[idx].id;
+                setSelectedAnswers((prev) => {
+                  const next = new Set(prev);
+                  if (next.has(choiceId)) {
+                    next.delete(choiceId);
+                  } else {
+                    next.add(choiceId);
+                  }
+                  return next;
+                });
+              }
             }
           }
           break;
@@ -492,12 +543,37 @@ export function StudySession({
       <QuestionRenderer
         question={currentQuestion}
         selectedAnswer={isViewingPast ? String(currentAnswer?.selectedAnswer ?? '') : selectedAnswer}
+        selectedAnswers={
+          isViewingPast
+            ? (Array.isArray(currentAnswer?.selectedAnswer) ? currentAnswer.selectedAnswer as string[] : [])
+            : Array.from(selectedAnswers)
+        }
+        matchingAnswers={
+          isViewingPast && Array.isArray(currentAnswer?.selectedAnswer)
+            ? Object.fromEntries(
+                (currentAnswer.selectedAnswer as string[])
+                  .filter((s) => s.includes(':'))
+                  .map((s) => { const [id, val] = s.split(':'); return [id, val]; })
+              )
+            : matchingAnswers
+        }
         sortedChoices={sortedChoices}
         isSubmitted={isViewingPast || justSubmitted}
         isCorrect={isViewingPast ? (currentAnswer?.isCorrect ?? false) : justCorrect}
         isViewOnly={isViewingPast}
         displayChoices={displayChoices}
         onAnswerChange={setSelectedAnswer}
+        onToggleAnswer={(choiceId) => {
+          setSelectedAnswers((prev) => {
+            const next = new Set(prev);
+            if (next.has(choiceId)) next.delete(choiceId);
+            else next.add(choiceId);
+            return next;
+          });
+        }}
+        onMatchingChange={(choiceId, value) => {
+          setMatchingAnswers((prev) => ({ ...prev, [choiceId]: value }));
+        }}
         onSortChange={setSortedChoices}
       />
 

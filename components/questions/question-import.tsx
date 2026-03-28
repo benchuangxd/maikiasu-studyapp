@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { parseQuestionsFromJSON, type ParseResult } from '@/lib/parsers/json-parser';
 import { LocalStorageAdapter, STORAGE_KEYS } from '@/lib/storage/local-storage';
-import type { Question, RawQuestionFile } from '@/types/question';
+import type { Question } from '@/types/question';
 import { cn } from '@/lib/utils';
 
 interface QuestionImportProps {
@@ -35,7 +35,9 @@ export function QuestionImport({ onImportComplete }: QuestionImportProps) {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const raw = JSON.parse(e.target?.result as string) as RawQuestionFile;
+          // Strip trailing commas before ] or } to tolerate common JSON errors
+          const jsonText = (e.target?.result as string).replace(/,\s*([}\]])/g, '$1');
+          const raw: unknown = JSON.parse(jsonText);
           const storage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTIONS);
           const existing = storage.get() ?? [];
           const parsed = parseQuestionsFromJSON(raw, existing);

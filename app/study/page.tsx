@@ -20,6 +20,8 @@ import {
   getReviewStats,
 } from '@/lib/services/review-service';
 import { cn } from '@/lib/utils';
+import { MODULES } from '@/lib/config/modules';
+import Image from 'next/image';
 import {
   Clock,
   BookOpen,
@@ -27,10 +29,11 @@ import {
   Sparkles,
   ArrowLeft,
   Check,
+  Library,
 } from 'lucide-react';
 
 type StudyMode = 'due' | 'topic' | 'all' | 'new';
-type Phase = 'mode-select' | 'topic-select' | 'due-topic-select' | 'quiz';
+type Phase = 'mode-select' | 'module-select' | 'topic-select' | 'due-topic-select' | 'quiz';
 
 const questionsStorage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTIONS);
 const sessionsStorage = new LocalStorageAdapter<StudySessionType[]>(STORAGE_KEYS.SESSIONS);
@@ -43,6 +46,7 @@ function StudyPageContent() {
   const [selectedMode, setSelectedMode] = useState<StudyMode | null>(null);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [savedSession, setSavedSession] = useState<ActiveSession | null>(null);
   const [resumeSession, setResumeSession] = useState<ActiveSession | null>(null);
 
@@ -82,7 +86,12 @@ function StudyPageContent() {
   const categories = useMemo(() => {
     const cats = new Set<string>();
     allQuestions.forEach((q) => cats.add(q.category));
-    return Array.from(cats).sort();
+    return Array.from(cats).sort((a, b) => {
+      const numA = parseInt(a.match(/^(\d+)/)?.[1] ?? '', 10);
+      const numB = parseInt(b.match(/^(\d+)/)?.[1] ?? '', 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.localeCompare(b);
+    });
   }, [allQuestions]);
 
   const stats = useMemo(() => {
@@ -101,7 +110,9 @@ function StudyPageContent() {
       // Pre-check all topics that have due questions
       setSelectedCategories(new Set(Object.keys(dueByTopic)));
     } else if (mode === 'topic') {
-      setPhase('topic-select');
+      setSelectedModule(null);
+      setSelectedCategories(new Set());
+      setPhase('module-select');
     } else {
       setPhase('quiz');
     }
@@ -169,6 +180,7 @@ function StudyPageContent() {
     setPhase('mode-select');
     setSelectedMode(null);
     setSelectedCategories(new Set());
+    setSelectedModule(null);
     setResumeSession(null);
     // Refresh questions and stats
     const stored = questionsStorage.get();
@@ -195,10 +207,10 @@ function StudyPageContent() {
       },
       {
         mode: 'topic',
-        title: 'By Topic',
-        description: 'Choose specific categories to study',
+        title: 'By Module',
+        description: 'Pick a module then filter by topic',
         count: allQuestions.length,
-        icon: <BookOpen className="h-6 w-6" />,
+        icon: <Library className="h-6 w-6" />,
         color: 'text-blue-400',
       },
       {
@@ -358,8 +370,19 @@ function StudyPageContent() {
     );
   }
 
-  // Phase: Topic Selection (By Topic mode)
-  if (phase === 'topic-select') {
+  // Phase: Module Selection
+  if (phase === 'module-select') {
+    // Build module list: defined modules + a catch-all for untagged questions
+    const moduleOptions = MODULES.map((mod) => {
+      const qs = allQuestions.filter((q) => q.module === mod.id);
+      return { id: mod.id, name: mod.name, count: qs.length };
+    });
+    // Untagged questions (no module field)
+    const untaggedCount = allQuestions.filter((q) => !q.module).length;
+    if (untaggedCount > 0) {
+      moduleOptions.push({ id: '__other__', name: 'Other', count: untaggedCount });
+    }
+
     return (
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center gap-3">
@@ -367,26 +390,90 @@ function StudyPageContent() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
+            <h1 className="text-2xl font-bold">Select Module</h1>
+            <p className="text-sm text-muted-foreground">Choose a module to study from.</p>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {moduleOptions.map(({ id, name, count }) => (
+            <Card
+              key={id}
+              className={cn(
+                'cursor-pointer border-2 transition-all hover:border-primary/50 hover:shadow-md',
+                count === 0 && 'pointer-events-none opacity-40'
+              )}
+              onClick={() => {
+                if (count === 0) return;
+                setSelectedModule(id);
+                setSelectedCategories(new Set());
+                setPhase('topic-select');
+              }}
+            >
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/android-chrome-192x192.png"
+                      alt={name}
+                      width={32}
+                      height={32}
+                      className="rounded-md"
+                    />
+                    <CardTitle className="text-base">{name}</CardTitle>
+                  </div>
+                  <Badge variant="secondary">{count}</Badge>
+                </div>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Phase: Topic Selection (within a module)
+  if (phase === 'topic-select') {
+    const moduleQuestions = selectedModule === '__other__'
+      ? allQuestions.filter((q) => !q.module)
+      : allQuestions.filter((q) => q.module === selectedModule);
+    const moduleCategories = Array.from(new Set(moduleQuestions.map((q) => q.category))).sort((a, b) => {
+      const numA = parseInt(a.match(/^(\d+)/)?.[1] ?? '', 10);
+      const numB = parseInt(b.match(/^(\d+)/)?.[1] ?? '', 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.localeCompare(b);
+    });
+    const moduleName = selectedModule === '__other__'
+      ? 'Other'
+      : MODULES.find((m) => m.id === selectedModule)?.name ?? selectedModule ?? 'Module';
+
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => setPhase('module-select')}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
             <h1 className="text-2xl font-bold">Select Topics</h1>
-            <p className="text-sm text-muted-foreground">Choose which categories to study.</p>
+            <p className="text-sm text-muted-foreground">{moduleName}</p>
           </div>
         </div>
 
         <div className="flex items-center justify-between">
           <Button variant="outline" size="sm" onClick={() => {
-            if (selectedCategories.size === categories.length) setSelectedCategories(new Set());
-            else setSelectedCategories(new Set(categories));
+            if (selectedCategories.size === moduleCategories.length) setSelectedCategories(new Set());
+            else setSelectedCategories(new Set(moduleCategories));
           }}>
-            {selectedCategories.size === categories.length ? 'Deselect All' : 'Select All'}
+            {selectedCategories.size === moduleCategories.length ? 'Deselect All' : 'Select All'}
           </Button>
           <span className="text-sm text-muted-foreground">
-            {selectedCategories.size} of {categories.length} selected
+            {selectedCategories.size} of {moduleCategories.length} selected
           </span>
         </div>
 
         <div className="space-y-2">
-          {categories.map((cat) => {
-            const catCount = allQuestions.filter((q) => q.category === cat).length;
+          {moduleCategories.map((cat) => {
+            const catCount = moduleQuestions.filter((q) => q.category === cat).length;
             const isSelected = selectedCategories.has(cat);
 
             return (
@@ -419,7 +506,7 @@ function StudyPageContent() {
           disabled={selectedCategories.size === 0}
           onClick={handleStartStudy}
         >
-          Start Study ({allQuestions.filter((q) => selectedCategories.has(q.category)).length} questions)
+          Start Study ({moduleQuestions.filter((q) => selectedCategories.has(q.category)).length} questions)
         </Button>
       </div>
     );

@@ -1,6 +1,8 @@
 export enum QuestionType {
   MULTIPLE_CHOICE = 'multiple_choice',
+  MULTI_SELECT = 'multi_select',
   SORTING = 'sorting',
+  MATCHING = 'matching',
   FILL_IN_BLANK = 'fill_in_blank',
 }
 
@@ -28,6 +30,8 @@ export interface Question {
   difficulty: Difficulty;
   createdAt: string;
   updatedAt: string;
+  matchOptions?: string[];   // numbered target options for MATCHING type (e.g. ["1. Raspberry Pi", "2. NVidia Jetson"])
+  module?: string;           // source module id (e.g. "iot", "psd")
 }
 
 export interface ReviewMetadata {
@@ -93,3 +97,16 @@ export interface RawTopic {
 export interface RawQuestionFile {
   topics: Record<string, RawTopic>;
 }
+
+export interface RawFlatQuestion {
+  question: string;
+  type?: 'single' | 'multiple' | 'matching';
+  options: string[];
+  source_page?: number;
+  chapter: string;
+  answer: string | string[] | Record<string, string>;
+  note?: string;
+  match_targets?: Record<string, string>;
+}
+
+export type RawFlatQuestionFile = RawFlatQuestion[];
