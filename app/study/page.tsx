@@ -24,7 +24,6 @@ import { MODULES } from '@/lib/config/modules';
 import Image from 'next/image';
 import {
   Clock,
-  BookOpen,
   Layers,
   Sparkles,
   ArrowLeft,
