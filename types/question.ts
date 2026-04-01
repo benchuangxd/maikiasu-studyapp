@@ -26,6 +26,7 @@ export interface Question {
   questionType: QuestionType;
   choices: QuestionChoice[];
   explanation: string;
+  note?: string;
   category: string;
   difficulty: Difficulty;
   createdAt: string;
@@ -106,6 +107,7 @@ export interface RawFlatQuestion {
   chapter: string;
   answer: string | string[] | Record<string, string>;
   note?: string;
+  explanation?: string;
   match_targets?: Record<string, string>;
 }
 
