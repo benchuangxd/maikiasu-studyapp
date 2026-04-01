@@ -21,6 +21,8 @@ const questionsStorage = new LocalStorageAdapter<Question[]>(STORAGE_KEYS.QUESTI
 const sessionsStorage = new LocalStorageAdapter<StudySession[]>(STORAGE_KEYS.SESSIONS);
 const loadedModulesStorage = new LocalStorageAdapter<Record<string, string>>(STORAGE_KEYS.LOADED_MODULES);
 // loaded-modules value: Record<moduleId, loadedAt ISO string>
+const moduleVersionsStorage = new LocalStorageAdapter<Record<string, string>>(STORAGE_KEYS.MODULE_VERSIONS);
+// module-versions value: Record<moduleId, version string>
 
 type ModuleStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
@@ -92,6 +94,8 @@ export default function Home() {
         const loadedAt = new Date().toISOString();
         const loadedMods = loadedModulesStorage.get() ?? {};
         loadedModulesStorage.set({ ...loadedMods, [mod.id]: loadedAt });
+        const moduleVersions = moduleVersionsStorage.get() ?? {};
+        moduleVersionsStorage.set({ ...moduleVersions, [mod.id]: mod.version });
         const modQuestions = next.filter((q) => q.module === mod.id);
         const cats = new Set(modQuestions.map((q) => q.category)).size;
         updateModuleState(mod.id, {
@@ -115,6 +119,8 @@ export default function Home() {
       const loadedAt = new Date().toISOString();
       const loadedMods = loadedModulesStorage.get() ?? {};
       loadedModulesStorage.set({ ...loadedMods, [mod.id]: loadedAt });
+      const moduleVersions = moduleVersionsStorage.get() ?? {};
+      moduleVersionsStorage.set({ ...moduleVersions, [mod.id]: mod.version });
 
       // Count categories for this module's new questions
       const modQuestions = next.filter((q) => q.module === mod.id);
@@ -183,25 +189,44 @@ export default function Home() {
     setModuleStates(initStates);
     setLoaded(true);
 
-    // Auto-import any modules that haven't been loaded yet
-    const notLoaded = MODULES.filter((m) => !loadedMods[m.id] || qs.filter((q) => q.module === m.id).length === 0);
-    if (notLoaded.length > 0) {
+    // Auto-import modules that haven't been loaded or have a stale version
+    const storedVersions = moduleVersionsStorage.get() ?? {};
+    const needsLoad = MODULES.filter((m) => {
+      const notLoaded = !loadedMods[m.id] || qs.filter((q) => q.module === m.id).length === 0;
+      const staleVersion = storedVersions[m.id] !== m.version;
+      return notLoaded || staleVersion;
+    });
+    if (needsLoad.length > 0) {
       // Fire sequentially to avoid concurrent writes to localStorage
       (async () => {
-        for (const mod of notLoaded) {
+        for (const mod of needsLoad) {
           await new Promise<void>((resolve) => {
             // We must access latest storage state each time
             const doLoad = async () => {
               const current = questionsStorage.get() ?? [];
               const lm = loadedModulesStorage.get() ?? {};
+              const mv = moduleVersionsStorage.get() ?? {};
+              const isStale = !!lm[mod.id] && mv[mod.id] !== mod.version;
               updateModuleState(mod.id, { status: 'loading', error: undefined });
               try {
-                const base = current.filter((q) => q.module !== mod.id);
-                const { imported, errors } = await fetchAndParseModule(mod, base);
-                const next = [...base, ...imported];
+                let next: Question[];
+                let imported: Question[];
+                let errors: string[];
+                if (isStale) {
+                  // Force reload: strip old copies and replace with fresh questions
+                  ({ imported, errors } = await fetchAndParseModule(mod, [], true));
+                  const freshTexts = new Set(imported.map((q) => q.text));
+                  const base = current.filter((q) => q.module !== mod.id && !freshTexts.has(q.text));
+                  next = [...base, ...imported];
+                } else {
+                  // First-time load: deduplicate against existing questions
+                  ({ imported, errors } = await fetchAndParseModule(mod, current));
+                  next = [...current, ...imported];
+                }
                 questionsStorage.set(next);
                 const loadedAt = new Date().toISOString();
                 loadedModulesStorage.set({ ...lm, [mod.id]: loadedAt });
+                moduleVersionsStorage.set({ ...mv, [mod.id]: mod.version });
                 const modQs = next.filter((q) => q.module === mod.id);
                 const cats = new Set(modQs.map((q) => q.category)).size;
                 updateModuleState(mod.id, {
