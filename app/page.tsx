@@ -193,7 +193,7 @@ export default function Home() {
     const storedVersions = moduleVersionsStorage.get() ?? {};
     const needsLoad = MODULES.filter((m) => {
       const notLoaded = !loadedMods[m.id] || qs.filter((q) => q.module === m.id).length === 0;
-      const staleVersion = storedVersions[m.id] !== m.version;
+      const staleVersion = !!loadedMods[m.id] && storedVersions[m.id] !== m.version;
       return notLoaded || staleVersion;
     });
     if (needsLoad.length > 0) {
