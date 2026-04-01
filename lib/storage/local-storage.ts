@@ -54,4 +54,5 @@ export const STORAGE_KEYS = {
   SETTINGS: 'maikiasu:settings',
   ACTIVE_SESSION: 'maikiasu:active-session',
   LOADED_MODULES: 'maikiasu:loaded-modules',
+  MODULE_VERSIONS: 'maikiasu:module-versions',
 } as const;
