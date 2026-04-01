@@ -11,7 +11,7 @@ import { SortableList } from '@/components/study/sortable-list';
 import type { Question, QuestionChoice } from '@/types/question';
 import { QuestionType } from '@/types/question';
 import { cn } from '@/lib/utils';
-import { CheckCircle2, XCircle, BookOpen } from 'lucide-react';
+import { CheckCircle2, XCircle, BookOpen, Pin } from 'lucide-react';
 
 interface QuestionRendererProps {
   question: Question;
@@ -354,6 +354,18 @@ export function QuestionRenderer({
                   {question.explanation}
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Note */}
+        {(isSubmitted || isViewOnly) && question.note && (
+          <div className="rounded-lg border bg-muted/20 p-3">
+            <div className="flex items-start gap-2">
+              <Pin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-xs italic text-muted-foreground leading-relaxed">
+                {question.note}
+              </p>
             </div>
           </div>
         )}
